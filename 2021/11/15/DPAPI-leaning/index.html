@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Liferay Portal反序列化, jokerscar&#39;blogs">
-    <meta name="description" content="漏洞概述Liferay（又称Liferay Portal）是一个开源门户项目，该项目包含了一个完整的J2EE应用。该项目使用了Web、EJB以及JMS等技术，特别是其前台界面部分使用Struts 框架技术，基于XML的portlet配置文件">
+    <meta name="keywords" content="DPAPI(leaning), jokerscar&#39;blogs">
+    <meta name="description" content="DPAPI概述前言微软在Windows2000之后提供了一个操作系统级的对数据保护加解密的接口DPAPI(Data Protection API)，操作系统级是指由操作系统本身提供的服务，不需要任何额外的库。其属于Crypt32.dll的一">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Liferay Portal反序列化 | jokerscar&#39;blogs</title>
+    <title>DPAPI(leaning) | jokerscar&#39;blogs</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -287,12 +287,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Liferay Portal反序列化</h1>
+                    <h1 class="description center-align post-title">DPAPI(leaning)</h1>
                 </div>
             </div>
         </div>
@@ -408,16 +408,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-                                <span class="chip bg-color">漏洞分析</span>
+                            <a href="/tags/Windows-api/">
+                                <span class="chip bg-color">Windows api</span>
                             </a>
                         
-                            <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-                                <span class="chip bg-color">Java代码审计</span>
+                            <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
+                                <span class="chip bg-color">密码获取</span>
                             </a>
                         
-                            <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
-                                <span class="chip bg-color">反序列化漏洞</span>
+                            <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
+                                <span class="chip bg-color">内网渗透</span>
                             </a>
                         
                     </div>
@@ -428,8 +428,12 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
-                                漏洞分析
+                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
+                                内网渗透
+                            </a>
+                        
+                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/Windows-API/" class="post-category">
+                                Windows API
                             </a>
                         
                     </div>
@@ -441,7 +445,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-03-12
+                    2021-11-15
                 </div>
                 
 
@@ -462,110 +466,83 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="漏洞概述"><a href="#漏洞概述" class="headerlink" title="漏洞概述"></a>漏洞概述</h2><p>Liferay（又称Liferay Portal）是一个开源门户项目，该项目包含了一个完整的J2EE应用。该项目使用了Web、EJB以及JMS等技术，特别是其前台界面部分使用Struts 框架技术，基于XML的portlet配置文件可以自由地动态扩展，使用了Web Services来支持一些远程信息的获取，使用 Apache Lucene实现全文检索功能。</p>
-<p>7.2.1 CE GA2 之前的 Liferay Portal 中不可信数据的反序列化允许远程攻击者通过 JSON Web 服务 (JSONWS) 执行任意代码。</p>
-<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p><em><strong>环境搭建</strong></em></p>
-<p>下载<a target="_blank" rel="noopener" href="https://github.com/liferay/liferay-portal/releases/tag/7.2.0-ga1">tomcat集成包</a>，在liferay-ce-portal-7.2.0-ga1\tomcat-9.0.17\bin路径下打开startup.bat，等待tomcat服务开启。</p>
-<p>访问<a href="http://127.0.0.1:8080能正常访问下图页面则说明搭建成功。">http://127.0.0.1:8080能正常访问下图页面则说明搭建成功。</a></p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBD8.tmp.jpg" alt="img"></p>
-<p>跟随网页提示完成初始化后进入以下页面，漏洞环境搭建完成</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBE9.tmp.jpg" alt="img"></p>
-<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>构造恶意代码</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEA.tmp.jpg" alt="img"></p>
-<p>将其编译为class文件后开启http服务</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEB.tmp.jpg" alt="img"></p>
-<p>使用Java反序列化利用工具<a target="_blank" rel="noopener" href="https://github.com/mbechler/marshalsec">marshalsec</a>的c3p0模块生成payload</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEC.tmp.jpg" alt="img"></p>
-<p>将构造完成的payload放入请求数据包中</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBED.tmp.jpg" alt="img"></p>
-<p>可以看到成功执行弹出计算器的命令</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEE.tmp.jpg" alt="img"></p>
-<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>从nvd官网对CVE-2020-7961的描述中发现反序列化的数据是经过了JSON web service的</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEF.tmp.jpg" alt="img"></p>
-<p>定位到WEB-INF&#x2F;web.xml中</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBF0.tmp.jpg" alt="img"></p>
-<p>通过该映射规则的servlet找到其对应的类为com.liferay.portal.jsonwebservice.JSONWebServiceServlet</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBF1.tmp.jpg" alt="img"></p>
-<p>跟进这个servlet类，其中的service方法中定义了查看json web服务的路径</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBF2.tmp.jpg" alt="img"></p>
-<p>在web页面中输入路径<a target="_blank" rel="noopener" href="http://url/api/jsonws%E5%8F%AF%E6%9F%A5%E7%9C%8Bapi%E5%88%97%E8%A1%A8%E3%80%82">http://url/api/jsonws可查看api列表。</a></p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC02.tmp.jpg" alt="img"></p>
-<p>在这些接口有多个接口参数接收java.lang.object，比如update-column，意味着在此处传递的参数可以构造符合Java Beans的可利用恶意类</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC03.tmp.jpg" alt="img"></p>
-<p>liferay在7以前的版本使用flexjson处理、序列化json数据而在7以后使用jodd json处理、序列化json数据，这里主要分析liferay7之后的版本。</p>
-<p>通过查阅资料得知liferay中的com.liferay.portal.json.JSONSerializerImpl实现了jodd中的json序列化的接口JSONSerializer</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC04.tmp.jpg" alt="img"></p>
-<p>在com.liferay.portal.json.JSONDeserializerImpl中实现了了jodd中的反序列化接口JSONDeserializer</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC05.tmp.jpg" alt="img"></p>
-<p>通过漏洞发现者whitecode团队给出jodd.json.Parser的调用图，我们可以在JSONWebServiceServlet下断点后发送&#x2F;api&#x2F;jsonws&#x2F;invoke请求</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC06.tmp.jpg" alt="img"></p>
-<p>一直debug到JSONWebServiceSerlet的父类JSONservlet中发现调用execute处理json继续跟入此方法</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC07.tmp.jpg" alt="img"></p>
-<p>观察com.liferay.portal.struts.JSONAction的execute方法，首先调用rerouteExecte检测路径，调用checkAuthToken方法鉴权，接着调用getJSON再对json数据处理，跟进getJSON</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC08.tmp.jpg" alt="img"></p>
-<p>在没有上传异常通过后进入getJSONWebServiceAction</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC09.tmp.jpg" alt="img"></p>
-<p>在JSONWebServiceAction中继续更热返回的JSONWebServiceInvokerAction类的invoke方法</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC0A.tmp.jpg" alt="img"></p>
-<p>在invoke方法的第一行中发现这里反序列化了_command，__command参数是用来传入调用的api方法</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC0B.tmp.jpg" alt="img"></p>
-<p>继续往下调用了_parseStatement，__executeStatement</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC1C.tmp.jpg" alt="img"></p>
-<p>跟入_executeStatement观察result的成分继续深入jsonWebServiceAction</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC1D.tmp.jpg" alt="img"></p>
-<p>从下面代码发现getJSONWebServiceAction()最后返回的是一个JSONWebServiceActionImpl实例</p>
-<p>public JSONWebServiceAction getJSONWebServiceAction(</p>
-<p>HttpServletRequest httpServletRequest)</p>
-<p>throws NoSuchJSONWebServiceException {</p>
-<p>String path &#x3D; GetterUtil.getString(httpServletRequest.getPathInfo());</p>
-<p>String method &#x3D; GetterUtil.getString(httpServletRequest.getMethod());</p>
-<p>String parameterPath &#x3D; null;</p>
-<p>JSONRPCRequest jsonRPCRequest &#x3D; null;</p>
-<p>int parameterPathIndex &#x3D; _getParameterPathIndex(path);</p>
-<p>if (parameterPathIndex !&#x3D; -1) {</p>
-<p>parameterPath &#x3D; path.substring(parameterPathIndex);</p>
-<p>path &#x3D; path.substring(0, parameterPathIndex);</p>
+                <h2 id="DPAPI概述"><a href="#DPAPI概述" class="headerlink" title="DPAPI概述"></a>DPAPI概述</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>微软在Windows2000之后提供了一个操作系统级的对数据保护加解密的接口DPAPI(Data Protection API)，操作系统级是指由操作系统本身提供的服务，不需要任何额外的库。其属于Crypt32.dll的一部分，可供任何加载它的用户进程使用。DPAPI有两套接口分别是用户接口和系统接口，在使用DPAPI加密的数据在解密时会使用用户身份的上下文解密，使得被加密的数据只能由当前用户解密。</p>
+<p>下图为微软官方给出的DPAPI的架构图</p>
+<p><img src="/2021/11/15/DPAPI-leaning/wps5B39.tmp.jpg" alt="img"></p>
+<h3 id="CryptProtectData-和CryptUnprotectData"><a href="#CryptProtectData-和CryptUnprotectData" class="headerlink" title="CryptProtectData 和CryptUnprotectData"></a>CryptProtectData 和CryptUnprotectData</h3><p>DPAPI(Data Protection API),Win32 DPAPI中有4个函数，分别是CryptProtectData、CryptUnProtectData、CryptProtectMemory和CryptUnProtectMemory。其中CryptProtectData加密数据，CryptUnprotectData解密数据，加密后的数据由应用程序负责安全存储，应用无需解析加密后的数据格式。但是，加密后的数据存储需要一定的机制，因为该数据可以被其他任何进程用来解密，当然CryptProtectData也提供了用户输入额外<code>数据</code>来参与对用户数据进行加密的参数，但依然无法放于暴力破解。两个函数的结构如下所示。</p>
+<p><img src="/2021/11/15/DPAPI-leaning/wps7B26.tmp.jpg" alt="img"></p>
+<p>输入数据参数pDataIn是一个DATA_BLOB结构，该结构的定义如下：</p>
+<p>typedef struct _CRYPTOAPI_BLOB {</p>
+<p>DWORD cbData; &#x2F;&#x2F;数据的长度</p>
+<p>BYTE* pbData; &#x2F;&#x2F;指向数据的指针</p>
+<p>} DATA_BLOB;</p>
+<p>当dwFlags标志位设置0时，DPAPI会使用当前用户的master key进行加密操作。</p>
+<p><img src="/2021/11/15/DPAPI-leaning/wpsC8D9.tmp.jpg" alt="img"></p>
+<h3 id="MasterKey"><a href="#MasterKey" class="headerlink" title="MasterKey"></a>MasterKey</h3><p>DPAPI会生成一个叫masterkey的强密钥，这个是在解密DPAPI加密数据中所需的最重要的一部分。该密钥受用户密码的保护，使用用户登录密码、SID和16字节随机数加密后保存在Master Key file中默认的有效期是三个月。前文我们提到masterkey。从文章<a target="_blank" rel="noopener" href="http://vztekoverflow.com/2018/07/31/tbal-dpapi-backdoor/">《tbal-dpapi-backdoor》</a>分析中我们知道masterkey是解密dpapi中最关键的一部分。</p>
+<p>注册表</p>
+<p>HKEY_LOCAL_MACHINE\Software\Microsoft\Cryptography\Protect\Providers\GUID</p>
+<p>存储了masterkey在生成时的迭代次数。</p>
+<p>· 用户master key文件位于%APPDATA%\Microsoft\Protect%SID%</p>
+<p>· 系统master key文件位于%WINDIR%\System32\Microsoft\Protect\S-1-5-18\User</p>
+<p><img src="/2021/11/15/DPAPI-leaning/wpsEC68.tmp.jpg" alt="img"></p>
+<p>其中preferred文件记录了正在使用的Masterkey及其过期时间，另外高版本的操作系统需在文件选项中取消勾选隐藏受保护文件选项才能看到。</p>
+<p><img src="/2021/11/15/DPAPI-leaning/wpsF8C4.tmp.jpg" alt="img"></p>
+<h2 id="在渗透测试中的部分利用"><a href="#在渗透测试中的部分利用" class="headerlink" title="在渗透测试中的部分利用"></a>在渗透测试中的部分利用</h2><h3 id="mimikatz"><a href="#mimikatz" class="headerlink" title="mimikatz"></a>mimikatz</h3><p>在最理想的状态(拥有管理员以上权限的shell)下使用mimikatz运行以下命令</p>
+<p>privilege::debug</p>
+<p>sekurlsa::dpapi</p>
+<p><img src="/2021/11/15/DPAPI-leaning/wps1536.tmp.jpg" alt="img"></p>
+<p>我们知道mimikatz中的sekurlsa模块都是操作lsass进程内存实现的。因此在无法做到对mimikatz或者其他什么无法直接在目标机器上运行mimikatz的情况下，我们可以利用微软开发的procdump工具将lsass进程内存dump下来。</p>
+<p><img src="/2021/11/15/DPAPI-leaning/wps2804.tmp.jpg" alt="img"></p>
+<p>再使用以下两个命令对dump下来的lsass.dmp读取dpapi</p>
+<p>sekurlsa::minidump lsass.dmp</p>
+<p>sekurlsa::dpapi</p>
+<p><img src="/2021/11/15/DPAPI-leaning/wps3CD5.tmp.jpg" alt="img"></p>
+<p>前面提到过很多第三方应用也使用了DPAPI的函数来对数据进行保护，mimikatz中自带了对chrome的利用模块。可使用以下两个命令获取DPAPI中的cookies和登录信息。</p>
+<p>dpapi::chrome &#x2F;in:”%localappdata%\Google\Chrome\User Data\Default\Cookies” &#x2F;unprotect</p>
+<p>dpapi::chrome &#x2F;in:”%localappdata%\Google\Chrome\User Data\Default\login data” &#x2F;unprotect</p>
+<p><img src="/2021/11/15/DPAPI-leaning/wps53B9.tmp.jpg" alt="img"></p>
+<h3 id="Preferred文件"><a href="#Preferred文件" class="headerlink" title="Preferred文件"></a>Preferred文件</h3><p>上面提到过在DPAPI的masterkey文件下存储了masterkey和preferred文件，masterkey作为解密的关键有着重要的作用。通过对preferred解析可以显示并延长masterkey的有效时间。以下是preferred的数据结构。</p>
+<p>typedef struct _tagPreferredMasterKey</p>
+<p>{</p>
+<p>GUID guidMasterKey;</p>
+<p>FILETIME ftCreated;</p>
+<p>} PREFERREDMASTERKEY, *PPREFERREDMASTERKEY;</p>
+<p>使用16进制编辑器打开preferred</p>
+<p><img src="/2021/11/15/DPAPI-leaning/wps68F8.tmp.jpg" alt="img"></p>
+<p>如图所示前16个字节对应的是guid，后8字节表示的是过期时间，可使用以下代码读取preferred文件</p>
+<p>#include &lt;windows.h&gt;</p>
+<p>#include&lt;stdio.h&gt;</p>
+<p>int main(void)</p>
+<p>{</p>
+<p>FILE* fp;</p>
+<p>unsigned char buf[24];</p>
+<p>fopen_s(&amp;fp, “C:&#x2F;&#x2F;Users&#x2F;Administrator&#x2F;Desktop&#x2F;tmp&#x2F;Preferred”, “rb”);</p>
+<p>fread(buf, 1, 24, fp);</p>
+<p>printf(“Data: “);</p>
+<p>for (int i &#x3D; 0; i &lt; 24; i++)</p>
+<p>{</p>
+<p>printf(“%02x”, buf[i]);</p>
 <p>}</p>
-<p>else {</p>
-<p>if (method.equals(HttpMethods.POST) &amp;&amp;</p>
-<p>!PortalUtil.isMultipartRequest(httpServletRequest)) {</p>
-<p>jsonRPCRequest &#x3D; JSONRPCRequest.detectJSONRPCRequest(</p>
-<p>httpServletRequest);</p>
-<p>if (jsonRPCRequest !&#x3D; null) {</p>
-<p>path +&#x3D; StringPool.SLASH + jsonRPCRequest.getMethod();</p>
-<p>method &#x3D; null;</p>
+<p>fclose(fp);</p>
+<p>printf(“\nguidMasterKey: %02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x\n”, buf[3], buf[2], buf[1], buf[0], buf[5], buf[4], buf[7], buf[6], buf[8], buf[9], buf[10], buf[11], buf[12], buf[13], buf[14], buf[15]);</p>
+<p>char lowDateTime[9], highDateTime[9];</p>
+<p>sprintf_s(lowDateTime, 9, “%02X%02X%02X%02X”, buf[19], buf[18], buf[17], buf[16]);</p>
+<p>sprintf_s(highDateTime, 9, “%02X%02X%02X%02X”, buf[23], buf[22], buf[21], buf[20]);</p>
+<p>printf(“dwLowDateTime:%s\n”, lowDateTime);</p>
+<p>printf(“dwHighDateTime:%s\n”, highDateTime);</p>
+<p>FILETIME ftUTC;</p>
+<p>SYSTEMTIME stUTC2;</p>
+<p>sscanf_s(lowDateTime, “%x”, &amp;ftUTC.dwLowDateTime);</p>
+<p>sscanf_s(highDateTime, “%x”, &amp;ftUTC.dwHighDateTime);</p>
+<p>FileTimeToSystemTime(&amp;ftUTC, &amp;stUTC2);</p>
+<p>printf(“”);</p>
+<p>printf(“Expiry time: %d-%d-%d %d:%d:%d\n”, stUTC2.wYear, stUTC2.wMonth, stUTC2.wDay, stUTC2.wHour, stUTC2.wMinute, stUTC2.wSecond);</p>
+<p>return 0;</p>
 <p>}</p>
-<p>}</p>
-<p>}</p>
-<p>JSONWebServiceActionParameters jsonWebServiceActionParameters &#x3D;</p>
-<p>new JSONWebServiceActionParameters();</p>
-<p>jsonWebServiceActionParameters.collectAll(</p>
-<p>httpServletRequest, parameterPath, jsonRPCRequest, null);</p>
-<p>if (jsonWebServiceActionParameters.getServiceContext() !&#x3D; null) {</p>
-<p>ServiceContextThreadLocal.pushServiceContext(</p>
-<p>jsonWebServiceActionParameters.getServiceContext());</p>
-<p>}</p>
-<p>JSONWebServiceActionConfig jsonWebServiceActionConfig &#x3D;</p>
-<p>_findJSONWebServiceAction(</p>
-<p>httpServletRequest, path, method,</p>
-<p>jsonWebServiceActionParameters);</p>
-<p>return new JSONWebServiceActionImpl(</p>
-<p>jsonWebServiceActionConfig, jsonWebServiceActionParameters,</p>
-<p>_jsonWebServiceNaming);</p>
-<p>}</p>
-<p>跟入JSONWebServiceActionImpl观察_prepareParameters方法，通过反射获取所有参数，for遍历拿到参数名并处理参数值，当参数值不为空时，会进行类型转换。</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC1E.tmp.jpg" alt="img"></p>
-<p>继续往后跟进跟进参数调用_convertValueToParameterValue方法</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC1F.tmp.jpg" alt="img"></p>
-<p>其中折叠的部分包含了将json反序列化传入的参数值，赋值给parameterValue的过程，并判断不是map实例并且是以{开头就反序列化JSONFactoryUtil.looseDeserialize(valueString, parameterType)，如果<strong>parameterType</strong>可控，那么就会造成反序列化漏洞</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC20.tmp.jpg" alt="img"></p>
-<p>上述的_jsonWebServiceActionParameters在其定义的过程中存入了一个JSONWebServiceActionParametersMap</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC21.tmp.jpg" alt="img"></p>
-<p>跟入JSONWebServiceActionParametersMap其中的putty方法在whitecode的文章中描述的很清晰，参数的类型取自key传进来的字符串，如果请求参数名称包含 ‘ <code>:</code>‘，传递进来的值会被构造为”:”前是key,”:”后是typename的hashmap。</p>
-<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC22.tmp.jpg" alt="img"></p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="#toc-9">https://xz.aliyun.com/t/7499#toc-9</a></p>
-<p><a target="_blank" rel="noopener" href="https://codewhitesec.blogspot.com/2020/03/liferay-portal-json-vulns.html">https://codewhitesec.blogspot.com/2020/03/liferay-portal-json-vulns.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://paper.seebug.org/1162/">https://paper.seebug.org/1162/</a></p>
+<p><img src="/2021/11/15/DPAPI-leaning/wps851C.tmp.jpg" alt="img"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>DPAPI是Windows提供的对数据保护的api，有四个核心的函数CryptProtectData、CryptUnProtectData、CryptProtectMemory和CryptUnProtectMemory。CryptProtectData负责加密数据，CryptUnProtectData负责解密数据</p>
+<p>masterkey是DPAPI加密解密的关键，默认90更新一次，masterkey存储位置的文件下一个preferred，对preferred文件解析可查看并修改masterkey的过期时间。</p>
+<p>使用mimikatz可直接获取到目标机器的masterkey，同时mimikatz自带有对部分使用了DPAPI应用的解密功能，如Chrome的cookies和login data。</p>
 
                 
             </div>
@@ -592,7 +569,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">http://example.com/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</a>
+                    <a href="http://example.com/2021/11/15/DPAPI-leaning/">http://example.com/2021/11/15/DPAPI-leaning/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -630,16 +607,16 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-                                    <span class="chip bg-color">漏洞分析</span>
+                                <a href="/tags/Windows-api/">
+                                    <span class="chip bg-color">Windows api</span>
                                 </a>
                             
-                                <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-                                    <span class="chip bg-color">Java代码审计</span>
+                                <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
+                                    <span class="chip bg-color">密码获取</span>
                                 </a>
                             
-                                <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
-                                    <span class="chip bg-color">反序列化漏洞</span>
+                                <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
+                                    <span class="chip bg-color">内网渗透</span>
                                 </a>
                             
                         </div>
@@ -691,60 +668,7 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/03/12/Ghostcat-Tomcat/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="Ghostcat Tomcat">
-                        
-                        <span class="card-title">Ghostcat Tomcat</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
-                                    漏洞分析
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E/">
-                        <span class="chip bg-color">中间件漏洞</span>
-                    </a>
-                    
-                    <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-                        <span class="chip bg-color">漏洞分析</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2022/03/12/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/">
+                <a href="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/">
                     <div class="card-image">
                         
                         
@@ -760,9 +684,9 @@
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-01-07
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -784,6 +708,67 @@
                     
                     <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">
                         <span class="chip bg-color">中间件</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/11/06/%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0-%E4%B8%80/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="内存马学习(一)">
+                        
+                        <span class="card-title">内存马学习(一)</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-06
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E5%86%85%E5%AD%98%E9%A9%AC/" class="post-category">
+                                    内存马
+                                </a>
+                            
+                            <a href="/categories/%E5%86%85%E5%AD%98%E9%A9%AC/webshell/" class="post-category">
+                                    webshell
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/webshell/">
+                        <span class="chip bg-color">webshell</span>
+                    </a>
+                    
+                    <a href="/tags/%E8%BF%9C%E6%8E%A7%E6%9C%A8%E9%A9%AC/">
+                        <span class="chip bg-color">远控木马</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
+                        <span class="chip bg-color">内存马</span>
                     </a>
                     
                 </div>

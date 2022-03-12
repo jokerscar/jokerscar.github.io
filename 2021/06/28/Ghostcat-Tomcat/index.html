@@ -4,8 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="DPAPI(leaning), jokerscar&#39;blogs">
-    <meta name="description" content="DPAPI概述前言微软在Windows2000之后提供了一个操作系统级的对数据保护加解密的接口DPAPI(Data Protection API)，操作系统级是指由操作系统本身提供的服务，不需要任何额外的库。其属于Crypt32.dll的一">
+    <meta name="keywords" content="Ghostcat Tomcat, jokerscar&#39;blogs">
+    <meta name="description" content="简介AJP是Apache提供的完成与其它服务器通讯的一种协议，用的是二进制传输，比HTTP文本传输有更高的效率。
+请求传输到tomcat的数据一般先经由tomcat中的连接器（connector），tomcat connector组件负责解">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>DPAPI(leaning) | jokerscar&#39;blogs</title>
+    <title>Ghostcat Tomcat | jokerscar&#39;blogs</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -287,12 +288,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">DPAPI(leaning)</h1>
+                    <h1 class="description center-align post-title">Ghostcat Tomcat</h1>
                 </div>
             </div>
         </div>
@@ -408,16 +409,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Windows-api/">
-                                <span class="chip bg-color">Windows api</span>
+                            <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E/">
+                                <span class="chip bg-color">中间件漏洞</span>
                             </a>
                         
-                            <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
-                                <span class="chip bg-color">密码获取</span>
-                            </a>
-                        
-                            <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
-                                <span class="chip bg-color">内网渗透</span>
+                            <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                                <span class="chip bg-color">漏洞分析</span>
                             </a>
                         
                     </div>
@@ -428,12 +425,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
-                                内网渗透
-                            </a>
-                        
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/Windows-API/" class="post-category">
-                                Windows API
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
+                                漏洞分析
                             </a>
                         
                     </div>
@@ -445,7 +438,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-03-12
+                    2021-06-28
                 </div>
                 
 
@@ -466,83 +459,51 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="DPAPI概述"><a href="#DPAPI概述" class="headerlink" title="DPAPI概述"></a>DPAPI概述</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>微软在Windows2000之后提供了一个操作系统级的对数据保护加解密的接口DPAPI(Data Protection API)，操作系统级是指由操作系统本身提供的服务，不需要任何额外的库。其属于Crypt32.dll的一部分，可供任何加载它的用户进程使用。DPAPI有两套接口分别是用户接口和系统接口，在使用DPAPI加密的数据在解密时会使用用户身份的上下文解密，使得被加密的数据只能由当前用户解密。</p>
-<p>下图为微软官方给出的DPAPI的架构图</p>
-<p><img src="/2022/03/12/DPAPI-leaning/wps5B39.tmp.jpg" alt="img"></p>
-<h3 id="CryptProtectData-和CryptUnprotectData"><a href="#CryptProtectData-和CryptUnprotectData" class="headerlink" title="CryptProtectData 和CryptUnprotectData"></a>CryptProtectData 和CryptUnprotectData</h3><p>DPAPI(Data Protection API),Win32 DPAPI中有4个函数，分别是CryptProtectData、CryptUnProtectData、CryptProtectMemory和CryptUnProtectMemory。其中CryptProtectData加密数据，CryptUnprotectData解密数据，加密后的数据由应用程序负责安全存储，应用无需解析加密后的数据格式。但是，加密后的数据存储需要一定的机制，因为该数据可以被其他任何进程用来解密，当然CryptProtectData也提供了用户输入额外<code>数据</code>来参与对用户数据进行加密的参数，但依然无法放于暴力破解。两个函数的结构如下所示。</p>
-<p><img src="/2022/03/12/DPAPI-leaning/wps7B26.tmp.jpg" alt="img"></p>
-<p>输入数据参数pDataIn是一个DATA_BLOB结构，该结构的定义如下：</p>
-<p>typedef struct _CRYPTOAPI_BLOB {</p>
-<p>DWORD cbData; &#x2F;&#x2F;数据的长度</p>
-<p>BYTE* pbData; &#x2F;&#x2F;指向数据的指针</p>
-<p>} DATA_BLOB;</p>
-<p>当dwFlags标志位设置0时，DPAPI会使用当前用户的master key进行加密操作。</p>
-<p><img src="/2022/03/12/DPAPI-leaning/wpsC8D9.tmp.jpg" alt="img"></p>
-<h3 id="MasterKey"><a href="#MasterKey" class="headerlink" title="MasterKey"></a>MasterKey</h3><p>DPAPI会生成一个叫masterkey的强密钥，这个是在解密DPAPI加密数据中所需的最重要的一部分。该密钥受用户密码的保护，使用用户登录密码、SID和16字节随机数加密后保存在Master Key file中默认的有效期是三个月。前文我们提到masterkey。从文章<a target="_blank" rel="noopener" href="http://vztekoverflow.com/2018/07/31/tbal-dpapi-backdoor/">《tbal-dpapi-backdoor》</a>分析中我们知道masterkey是解密dpapi中最关键的一部分。</p>
-<p>注册表</p>
-<p>HKEY_LOCAL_MACHINE\Software\Microsoft\Cryptography\Protect\Providers\GUID</p>
-<p>存储了masterkey在生成时的迭代次数。</p>
-<p>· 用户master key文件位于%APPDATA%\Microsoft\Protect%SID%</p>
-<p>· 系统master key文件位于%WINDIR%\System32\Microsoft\Protect\S-1-5-18\User</p>
-<p><img src="/2022/03/12/DPAPI-leaning/wpsEC68.tmp.jpg" alt="img"></p>
-<p>其中preferred文件记录了正在使用的Masterkey及其过期时间，另外高版本的操作系统需在文件选项中取消勾选隐藏受保护文件选项才能看到。</p>
-<p><img src="/2022/03/12/DPAPI-leaning/wpsF8C4.tmp.jpg" alt="img"></p>
-<h2 id="在渗透测试中的部分利用"><a href="#在渗透测试中的部分利用" class="headerlink" title="在渗透测试中的部分利用"></a>在渗透测试中的部分利用</h2><h3 id="mimikatz"><a href="#mimikatz" class="headerlink" title="mimikatz"></a>mimikatz</h3><p>在最理想的状态(拥有管理员以上权限的shell)下使用mimikatz运行以下命令</p>
-<p>privilege::debug</p>
-<p>sekurlsa::dpapi</p>
-<p><img src="/2022/03/12/DPAPI-leaning/wps1536.tmp.jpg" alt="img"></p>
-<p>我们知道mimikatz中的sekurlsa模块都是操作lsass进程内存实现的。因此在无法做到对mimikatz或者其他什么无法直接在目标机器上运行mimikatz的情况下，我们可以利用微软开发的procdump工具将lsass进程内存dump下来。</p>
-<p><img src="/2022/03/12/DPAPI-leaning/wps2804.tmp.jpg" alt="img"></p>
-<p>再使用以下两个命令对dump下来的lsass.dmp读取dpapi</p>
-<p>sekurlsa::minidump lsass.dmp</p>
-<p>sekurlsa::dpapi</p>
-<p><img src="/2022/03/12/DPAPI-leaning/wps3CD5.tmp.jpg" alt="img"></p>
-<p>前面提到过很多第三方应用也使用了DPAPI的函数来对数据进行保护，mimikatz中自带了对chrome的利用模块。可使用以下两个命令获取DPAPI中的cookies和登录信息。</p>
-<p>dpapi::chrome &#x2F;in:”%localappdata%\Google\Chrome\User Data\Default\Cookies” &#x2F;unprotect</p>
-<p>dpapi::chrome &#x2F;in:”%localappdata%\Google\Chrome\User Data\Default\login data” &#x2F;unprotect</p>
-<p><img src="/2022/03/12/DPAPI-leaning/wps53B9.tmp.jpg" alt="img"></p>
-<h3 id="Preferred文件"><a href="#Preferred文件" class="headerlink" title="Preferred文件"></a>Preferred文件</h3><p>上面提到过在DPAPI的masterkey文件下存储了masterkey和preferred文件，masterkey作为解密的关键有着重要的作用。通过对preferred解析可以显示并延长masterkey的有效时间。以下是preferred的数据结构。</p>
-<p>typedef struct _tagPreferredMasterKey</p>
-<p>{</p>
-<p>GUID guidMasterKey;</p>
-<p>FILETIME ftCreated;</p>
-<p>} PREFERREDMASTERKEY, *PPREFERREDMASTERKEY;</p>
-<p>使用16进制编辑器打开preferred</p>
-<p><img src="/2022/03/12/DPAPI-leaning/wps68F8.tmp.jpg" alt="img"></p>
-<p>如图所示前16个字节对应的是guid，后8字节表示的是过期时间，可使用以下代码读取preferred文件</p>
-<p>#include &lt;windows.h&gt;</p>
-<p>#include&lt;stdio.h&gt;</p>
-<p>int main(void)</p>
-<p>{</p>
-<p>FILE* fp;</p>
-<p>unsigned char buf[24];</p>
-<p>fopen_s(&amp;fp, “C:&#x2F;&#x2F;Users&#x2F;Administrator&#x2F;Desktop&#x2F;tmp&#x2F;Preferred”, “rb”);</p>
-<p>fread(buf, 1, 24, fp);</p>
-<p>printf(“Data: “);</p>
-<p>for (int i &#x3D; 0; i &lt; 24; i++)</p>
-<p>{</p>
-<p>printf(“%02x”, buf[i]);</p>
-<p>}</p>
-<p>fclose(fp);</p>
-<p>printf(“\nguidMasterKey: %02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x\n”, buf[3], buf[2], buf[1], buf[0], buf[5], buf[4], buf[7], buf[6], buf[8], buf[9], buf[10], buf[11], buf[12], buf[13], buf[14], buf[15]);</p>
-<p>char lowDateTime[9], highDateTime[9];</p>
-<p>sprintf_s(lowDateTime, 9, “%02X%02X%02X%02X”, buf[19], buf[18], buf[17], buf[16]);</p>
-<p>sprintf_s(highDateTime, 9, “%02X%02X%02X%02X”, buf[23], buf[22], buf[21], buf[20]);</p>
-<p>printf(“dwLowDateTime:%s\n”, lowDateTime);</p>
-<p>printf(“dwHighDateTime:%s\n”, highDateTime);</p>
-<p>FILETIME ftUTC;</p>
-<p>SYSTEMTIME stUTC2;</p>
-<p>sscanf_s(lowDateTime, “%x”, &amp;ftUTC.dwLowDateTime);</p>
-<p>sscanf_s(highDateTime, “%x”, &amp;ftUTC.dwHighDateTime);</p>
-<p>FileTimeToSystemTime(&amp;ftUTC, &amp;stUTC2);</p>
-<p>printf(“”);</p>
-<p>printf(“Expiry time: %d-%d-%d %d:%d:%d\n”, stUTC2.wYear, stUTC2.wMonth, stUTC2.wDay, stUTC2.wHour, stUTC2.wMinute, stUTC2.wSecond);</p>
-<p>return 0;</p>
-<p>}</p>
-<p><img src="/2022/03/12/DPAPI-leaning/wps851C.tmp.jpg" alt="img"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>DPAPI是Windows提供的对数据保护的api，有四个核心的函数CryptProtectData、CryptUnProtectData、CryptProtectMemory和CryptUnProtectMemory。CryptProtectData负责加密数据，CryptUnProtectData负责解密数据</p>
-<p>masterkey是DPAPI加密解密的关键，默认90更新一次，masterkey存储位置的文件下一个preferred，对preferred文件解析可查看并修改masterkey的过期时间。</p>
-<p>使用mimikatz可直接获取到目标机器的masterkey，同时mimikatz自带有对部分使用了DPAPI应用的解密功能，如Chrome的cookies和login data。</p>
+                <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>AJP是Apache提供的完成与其它服务器通讯的一种协议，用的是二进制传输，比HTTP文本传输有更高的效率。</p>
+<p>请求传输到tomcat的数据一般先经由tomcat中的连接器（connector），tomcat connector组件负责解析客户端发来的报文并封装成request对象，还负责组装响应回客户端的报文将其封装成Response对象。</p>
+<p>HTTP协议的连接器默认监听8080端口，负责建立HTTP连接。通过浏览器访问Tomcat服务器的web应用时使用的就是HTTP Connector。</p>
+<p>AJP协议的连接器默认监听8009端口，负责和其他HTTP服务器建立连接，在tomcat与其他HTTP服务器连接时用的就是，AJP Connector。</p>
+<p>AJP与HTTP的配置在conf&#x2F;server.xml中</p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DA1.tmp.jpg" alt="img"></p>
+<h3 id="漏洞利用流程跟踪："><a href="#漏洞利用流程跟踪：" class="headerlink" title="漏洞利用流程跟踪："></a><strong>漏洞利用流程跟踪</strong>：</h3><h4 id="环境准备："><a href="#环境准备：" class="headerlink" title="环境准备："></a>环境准备：</h4><p>​    首先下载tomcat存在AJP协议漏洞的版本源码文件并配置用idea打开项目，具体步骤可参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35262405/article/details/101780644">Tomcat源码编译</a>，如果访问tomcat首页出现500错误可在org.apache.catalina.startup.ContextConfig 类中增加如下一行初始化jsp解析。</p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DA2.tmp.jpg" alt="img"></p>
+<p>poc（<a target="_blank" rel="noopener" href="https://github.com/YDHCUI/CNVD-2020-10487-Tomcat-Ajp-lfi%EF%BC%89">https://github.com/YDHCUI/CNVD-2020-10487-Tomcat-Ajp-lfi）</a></p>
+<h4 id="流程分析："><a href="#流程分析：" class="headerlink" title="流程分析："></a>流程分析：</h4><p>​    AJP协议的请求在tomcat中内的请求流程与HTTP相似，主要走向为AjpProcessor类-&gt;service()-&gt;prepareRequest()。而AJP协议漏洞产生是因为tomcat对ajp传递过来的数据处理存在问题，导致我们可以控制”javax.servlet.include.request_uri”，”javax.servlet.include.path_info”，”javax.servlet.include.servlet_path”，从而读取文件或者文件包含。</p>
+<p>因此对流程分析时首先从AjpProcessor类的service()处断点开始debug然后在kali中运行poc发起ajp请求</p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DB3.tmp.jpg" alt="img"></p>
+<p>在poc中我们设置了AJP协议的三个参数</p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DB4.tmp.jpg" alt="img"></p>
+<p>而在tomcat对ajp请求处理流程中设置参数的位置在AjpProcessor.AjpProcessor()方法中</p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DB5.tmp.jpg" alt="img"></p>
+<p>AjpProcessor.AjpProcessor()方法调用了request.setAttribute()方法来设置参数值，这次的AJP请求中该方法会被循环执行三次，这里我们可以继续跟入request.setAttribute()方法。</p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DB6.tmp.jpg" alt="img"></p>
+<p>如上图requests.setAttribute()方法被循环三次的过程中，poc构造的三个参数会被存入attributes这个hashmap，这里就是漏洞触发的第一个点。</p>
+<p>在继续后面servlet的分析之前可以复现一遍整个过程用wireshark抓取数据包观察</p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DB7.tmp.jpg" alt="img"></p>
+<p>在请求中有四个重要参数，我们请求的URI是”&#x2F;asdf”这是一个在后台中并不存在的servlet。Tomcat中有两个默认定义的servlet，一个是Defaultservlet另一个是Jspservlet，当URI无法匹配任何servlet时，会由Defaultservlet来处理。而DefaultServlet处理流程是DefaultServlet类-&gt;service()-&gt;doGet()&#x2F;doPost(),这里使用的poc中默认get请求，所以直接在DfaultServlet类下的doGet()方法处断点然后执行poc发送请求。</p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DB8.tmp.jpg" alt="img"></p>
+<p>doGet方法调用了saveResource()方法，跟进saveResource()方法发现serveResource()方法又调用了getRelativePath()方法来对请求的路径进行拼接</p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DB9.tmp.jpg" alt="img"></p>
+<p>跟入getRelativePath()方法可以发现，这里就是将我们传入的path_info 、servlet_path 进行复制、拼接的地方，其中request_uri用来做判断，如果传递进来的request_uri为空则漏洞利用失败。</p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DBA.tmp.jpg" alt="img"></p>
+<p>再来观察getResource方法</p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DBB.tmp.jpg" alt="img"></p>
+<p>getResource调用了非法路径检测函数vaildate()并传入了path值来判断路径是否符合限制条件</p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DBC.tmp.jpg" alt="img"></p>
+<p>在vaildate()方法中定义了传入path的限制，因此文件读取操作中不能由&#x2F;..&#x2F;这形式</p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DCD.tmp.jpg" alt="img"></p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DCE.tmp.jpg" alt="img"></p>
+<p>最后回到getResource()方法开始文件读取漏洞利用。</p>
+<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DCF.tmp.jpg" alt="img"></p>
+<h3 id="RCE"><a href="#RCE" class="headerlink" title="RCE"></a>RCE</h3><p>之前提到过tomcat默认的servlet有两个，触发文件读取的是Defaultservlet，当URI以.jsp结尾时默认匹配Jspservlet</p>
+<p>1.根据JSP文件生成对应Servlet的Java代码（JSP文件生成类的父类我org.apache.jasper.runtime.HttpJspBase——实现了Servlet接口）</p>
+<p>2.将Java代码编译为Java类。</p>
+<p>3.构造Servlet类实例并且执行请求。</p>
+<p>其实本质核心就是通过JspServlet来执行我们想要访问的.jsp文件</p>
+<p>所以想要RCE的前提就是，先要想办法将写有自己想要执行的命令的文件(可以是任意文件后缀，甚至没有后缀)上传到webapps的目录下，才能访问该文件然后通过JSP模板的解析造成RCE。</p>
+<h3 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a><strong>参考文章</strong></h3><p>1、<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/hH0dpRWml0Rt7FxFOsWcMg">https://mp.weixin.qq.com/s/hH0dpRWml0Rt7FxFOsWcMg</a></p>
+<p>2、<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7683">https://xz.aliyun.com/t/7683</a></p>
+<p>3、<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35262405/article/details/101780644">https://blog.csdn.net/qq_35262405/article/details/101780644</a></p>
 
                 
             </div>
@@ -569,7 +530,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/03/12/DPAPI-leaning/">http://example.com/2022/03/12/DPAPI-leaning/</a>
+                    <a href="http://example.com/2021/06/28/Ghostcat-Tomcat/">http://example.com/2021/06/28/Ghostcat-Tomcat/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -607,16 +568,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Windows-api/">
-                                    <span class="chip bg-color">Windows api</span>
+                                <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E/">
+                                    <span class="chip bg-color">中间件漏洞</span>
                                 </a>
                             
-                                <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
-                                    <span class="chip bg-color">密码获取</span>
-                                </a>
-                            
-                                <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
-                                    <span class="chip bg-color">内网渗透</span>
+                                <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                                    <span class="chip bg-color">漏洞分析</span>
                                 </a>
                             
                         </div>
@@ -664,18 +621,17 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/03/12/DPAPI-leaning/">
+                <a href="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="DPAPI(leaning)">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Liferay Portal反序列化">
                         
-                        <span class="card-title">DPAPI(leaning)</span>
+                        <span class="card-title">Liferay Portal反序列化</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -685,39 +641,34 @@
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-07-02
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
-                                    内网渗透
-                                </a>
-                            
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/Windows-API/" class="post-category">
-                                    Windows API
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
+                                    漏洞分析
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Windows-api/">
-                        <span class="chip bg-color">Windows api</span>
+                    <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                        <span class="chip bg-color">漏洞分析</span>
                     </a>
                     
-                    <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
-                        <span class="chip bg-color">密码获取</span>
+                    <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+                        <span class="chip bg-color">Java代码审计</span>
                     </a>
                     
-                    <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
-                        <span class="chip bg-color">内网渗透</span>
+                    <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
+                        <span class="chip bg-color">反序列化漏洞</span>
                     </a>
                     
                 </div>
@@ -728,16 +679,16 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+                本篇&nbsp;<i class="far fa-dot-circle"></i>
             </div>
             <div class="card">
-                <a href="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/">
+                <a href="/2021/06/28/Ghostcat-Tomcat/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="Windows下密码获取(leaning)">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="Ghostcat Tomcat">
                         
-                        <span class="card-title">Windows下密码获取(leaning)</span>
+                        <span class="card-title">Ghostcat Tomcat</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -748,25 +699,30 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-28
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
-                                    内网渗透
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
+                                    漏洞分析
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
-                        <span class="chip bg-color">密码获取</span>
+                    <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E/">
+                        <span class="chip bg-color">中间件漏洞</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                        <span class="chip bg-color">漏洞分析</span>
                     </a>
                     
                 </div>
