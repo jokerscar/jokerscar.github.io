@@ -4,11 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="IIS漏洞总结, jokerscar&#39;blogs">
-    <meta name="description" content="IIS漏洞总结IIS put影响范围：iis6.0
-漏洞环境搭建：在winserver2003中安装完IIS6后打开IIS管理器保证web服务扩展中的Active Server Pages和WebDAV是允许状态
-
-然后将主目录设置为可写入">
+    <meta name="keywords" content="DPAPI(leaning), jokerscar&#39;blogs">
+    <meta name="description" content="DPAPI概述前言微软在Windows2000之后提供了一个操作系统级的对数据保护加解密的接口DPAPI(Data Protection API)，操作系统级是指由操作系统本身提供的服务，不需要任何额外的库。其属于Crypt32.dll的一">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -20,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>IIS漏洞总结 | jokerscar&#39;blogs</title>
+    <title>DPAPI(leaning) | jokerscar&#39;blogs</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -290,12 +287,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">IIS漏洞总结</h1>
+                    <h1 class="description center-align post-title">DPAPI(leaning)</h1>
                 </div>
             </div>
         </div>
@@ -411,12 +408,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-                                <span class="chip bg-color">漏洞分析</span>
+                            <a href="/tags/Windows-api/">
+                                <span class="chip bg-color">Windows api</span>
                             </a>
                         
-                            <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">
-                                <span class="chip bg-color">中间件</span>
+                            <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
+                                <span class="chip bg-color">密码获取</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
+                                <span class="chip bg-color">内网渗透</span>
                             </a>
                         
                     </div>
@@ -427,8 +428,12 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
-                                漏洞分析
+                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
+                                内网渗透
+                            </a>
+                        
+                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/Windows-API/" class="post-category">
+                                Windows API
                             </a>
                         
                     </div>
@@ -440,7 +445,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-01-07
+                    2022-03-12
                 </div>
                 
 
@@ -461,48 +466,83 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="IIS漏洞总结"><a href="#IIS漏洞总结" class="headerlink" title="IIS漏洞总结"></a><strong>IIS漏洞总结</strong></h1><h2 id="IIS-put"><a href="#IIS-put" class="headerlink" title="IIS put"></a><strong>IIS put</strong></h2><p>影响范围：iis6.0</p>
-<h3 id="漏洞环境搭建："><a href="#漏洞环境搭建：" class="headerlink" title="漏洞环境搭建："></a>漏洞环境搭建：</h3><p>在winserver2003中安装完IIS6后打开IIS管理器保证web服务扩展中的Active Server Pages和WebDAV是允许状态</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wps6349.tmp.jpg" alt="img"></p>
-<p>然后将主目录设置为可写入权限</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wps82E8.tmp.jpg" alt="img"></p>
-<h3 id="漏洞复现："><a href="#漏洞复现：" class="headerlink" title="漏洞复现："></a>漏洞复现：</h3><p>直接发送put包可创建对应的文件</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wps9F6A.tmp.jpg" alt="img"></p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wpsB6BB.tmp.jpg" alt="img"></p>
-<h3 id="漏洞修复："><a href="#漏洞修复：" class="headerlink" title="漏洞修复："></a>漏洞修复：</h3><p>关闭WebDAV和写权限</p>
-<h2 id="远程代码执行-CVE-2017-7269"><a href="#远程代码执行-CVE-2017-7269" class="headerlink" title="远程代码执行(CVE-2017-7269)"></a><strong>远程代码执行(CVE-2017-7269)</strong></h2><h3 id="漏洞环境搭建：-1"><a href="#漏洞环境搭建：-1" class="headerlink" title="漏洞环境搭建："></a>漏洞环境搭建：</h3><p>IIS6.0开启WebDAV，可延用上一个漏洞环境（但漏洞利用条件苛刻，成功的概率低暂未及时截图复现成功的结果）</p>
-<h2 id="文件解析漏洞"><a href="#文件解析漏洞" class="headerlink" title="文件解析漏洞"></a><strong>文件解析漏洞</strong></h2><h3 id="1、目录解析漏洞"><a href="#1、目录解析漏洞" class="headerlink" title="1、目录解析漏洞"></a><strong>1、目录解析漏洞</strong></h3><p>在 IIS5.x&#x2F;6.0 中，默认会将 *.asp（.asa、.cer、.cdx ）目录下的所有文件当成Asp解析。攻击者可利用此漏洞绕过文件上传限制以解析asp脚本</p>
-<h4 id="漏洞演示："><a href="#漏洞演示：" class="headerlink" title="漏洞演示："></a><strong>漏洞演示：</strong></h4><p>在iis的路径下新建xxx.asp的文件夹</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wpsD7F0.tmp.jpg" alt="img"></p>
-<p>在新建的.asp文件夹中再新建一个jpg文件并在内容中写入asp脚本</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wpsF78F.tmp.jpg" alt="img"></p>
-<p>可以看到在浏览器中实际解析的是asp的内容</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wpsFDB.tmp.jpg" alt="img"></p>
-<h3 id="2、文件名解析漏洞"><a href="#2、文件名解析漏洞" class="headerlink" title="2、文件名解析漏洞"></a><strong>2、文件名解析漏洞</strong></h3><p>在 IIS5.x&#x2F;6.0 中，默认会将 <em>.asp;（.asa;.jpg、</em>.cer;.jpg）这种格式的文件名，当成Asp解析，是因为服务器默认不解析; 号及其后面的内容，相当于截断。</p>
-<h4 id="漏洞演示：-1"><a href="#漏洞演示：-1" class="headerlink" title="漏洞演示："></a><strong>漏洞演示：</strong></h4><p>在iis的路径下创建一个*.asp;.jpg文件内容同样写入asp脚本，可以看到在windows下是jpg的文件</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wps29DC.tmp.jpg" alt="img"></p>
-<p>可以看到iis解析出的是asp的脚本</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wps4370.tmp.jpg" alt="img"></p>
-<h3 id="3、IIS7-amp-7-5解析漏洞"><a href="#3、IIS7-amp-7-5解析漏洞" class="headerlink" title="3、IIS7&amp;7.5解析漏洞"></a><strong>3、IIS7&amp;7.5解析漏洞</strong></h3><h4 id="环境搭建："><a href="#环境搭建：" class="headerlink" title="环境搭建："></a><strong>环境搭建：</strong></h4><p>在win server 2008中安装iis在处理</p>
-<p>在iis管理器的处理映射中添加模块映射php-cgi.exe</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wps5F94.tmp.jpg" alt="img"></p>
-<p>验证iis已经可以解析php脚本</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wps7B5A.tmp.jpg" alt="img"></p>
-<p>开启cgi.fix_pathinfo，具体步骤为将php.ini中的cgi.fix_pathinfo的注释取消掉并把值设为1</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wps9859.tmp.jpg" alt="img"></p>
-<h4 id="漏洞演示：-2"><a href="#漏洞演示：-2" class="headerlink" title="漏洞演示："></a><strong>漏洞演示：</strong></h4><p>创建一个JPG文件并写入php脚本的内容，直接在浏览器中访问可以看到iis解析的是图片</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wpsB9AE.tmp.jpg" alt="img"></p>
-<p>在路径后面再加入&#x2F;.php可发现iis成功解析php脚本</p>
-<h2 id="IIS-7-HTTP-sys漏洞（CVE-2015-1635）"><a href="#IIS-7-HTTP-sys漏洞（CVE-2015-1635）" class="headerlink" title="IIS 7 HTTP.sys漏洞（CVE-2015-1635）"></a><strong>IIS 7 HTTP.sys漏洞（CVE-2015-1635）</strong></h2><p>这是HTTP.SYS(一个系统核心组件)的一个远程代码漏洞，攻击者发送恶意请求的数据包，执行代码可读取IIS服务器中内存数据，甚至蓝屏</p>
-<p>漏洞演示：</p>
-<p>在windows server2008中安装iis7.*的环境并开启</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wpsD219.tmp.jpg" alt="img"></p>
-<p>metasploit中有对应的exp可以search关键字找到</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wpsEF08.tmp.jpg" alt="img"></p>
-<p>设置相应的参数后运行exp</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wps466.tmp.jpg" alt="img"></p>
-<p>可以看到目标已成功被攻击至蓝屏状态</p>
-<p><img src="/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/wps1B69.tmp.jpg" alt="img"></p>
+                <h2 id="DPAPI概述"><a href="#DPAPI概述" class="headerlink" title="DPAPI概述"></a>DPAPI概述</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>微软在Windows2000之后提供了一个操作系统级的对数据保护加解密的接口DPAPI(Data Protection API)，操作系统级是指由操作系统本身提供的服务，不需要任何额外的库。其属于Crypt32.dll的一部分，可供任何加载它的用户进程使用。DPAPI有两套接口分别是用户接口和系统接口，在使用DPAPI加密的数据在解密时会使用用户身份的上下文解密，使得被加密的数据只能由当前用户解密。</p>
+<p>下图为微软官方给出的DPAPI的架构图</p>
+<p><img src="/2022/03/12/DPAPI-leaning/wps5B39.tmp.jpg" alt="img"></p>
+<h3 id="CryptProtectData-和CryptUnprotectData"><a href="#CryptProtectData-和CryptUnprotectData" class="headerlink" title="CryptProtectData 和CryptUnprotectData"></a>CryptProtectData 和CryptUnprotectData</h3><p>DPAPI(Data Protection API),Win32 DPAPI中有4个函数，分别是CryptProtectData、CryptUnProtectData、CryptProtectMemory和CryptUnProtectMemory。其中CryptProtectData加密数据，CryptUnprotectData解密数据，加密后的数据由应用程序负责安全存储，应用无需解析加密后的数据格式。但是，加密后的数据存储需要一定的机制，因为该数据可以被其他任何进程用来解密，当然CryptProtectData也提供了用户输入额外<code>数据</code>来参与对用户数据进行加密的参数，但依然无法放于暴力破解。两个函数的结构如下所示。</p>
+<p><img src="/2022/03/12/DPAPI-leaning/wps7B26.tmp.jpg" alt="img"></p>
+<p>输入数据参数pDataIn是一个DATA_BLOB结构，该结构的定义如下：</p>
+<p>typedef struct _CRYPTOAPI_BLOB {</p>
+<p>DWORD cbData; &#x2F;&#x2F;数据的长度</p>
+<p>BYTE* pbData; &#x2F;&#x2F;指向数据的指针</p>
+<p>} DATA_BLOB;</p>
+<p>当dwFlags标志位设置0时，DPAPI会使用当前用户的master key进行加密操作。</p>
+<p><img src="/2022/03/12/DPAPI-leaning/wpsC8D9.tmp.jpg" alt="img"></p>
+<h3 id="MasterKey"><a href="#MasterKey" class="headerlink" title="MasterKey"></a>MasterKey</h3><p>DPAPI会生成一个叫masterkey的强密钥，这个是在解密DPAPI加密数据中所需的最重要的一部分。该密钥受用户密码的保护，使用用户登录密码、SID和16字节随机数加密后保存在Master Key file中默认的有效期是三个月。前文我们提到masterkey。从文章<a target="_blank" rel="noopener" href="http://vztekoverflow.com/2018/07/31/tbal-dpapi-backdoor/">《tbal-dpapi-backdoor》</a>分析中我们知道masterkey是解密dpapi中最关键的一部分。</p>
+<p>注册表</p>
+<p>HKEY_LOCAL_MACHINE\Software\Microsoft\Cryptography\Protect\Providers\GUID</p>
+<p>存储了masterkey在生成时的迭代次数。</p>
+<p>· 用户master key文件位于%APPDATA%\Microsoft\Protect%SID%</p>
+<p>· 系统master key文件位于%WINDIR%\System32\Microsoft\Protect\S-1-5-18\User</p>
+<p><img src="/2022/03/12/DPAPI-leaning/wpsEC68.tmp.jpg" alt="img"></p>
+<p>其中preferred文件记录了正在使用的Masterkey及其过期时间，另外高版本的操作系统需在文件选项中取消勾选隐藏受保护文件选项才能看到。</p>
+<p><img src="/2022/03/12/DPAPI-leaning/wpsF8C4.tmp.jpg" alt="img"></p>
+<h2 id="在渗透测试中的部分利用"><a href="#在渗透测试中的部分利用" class="headerlink" title="在渗透测试中的部分利用"></a>在渗透测试中的部分利用</h2><h3 id="mimikatz"><a href="#mimikatz" class="headerlink" title="mimikatz"></a>mimikatz</h3><p>在最理想的状态(拥有管理员以上权限的shell)下使用mimikatz运行以下命令</p>
+<p>privilege::debug</p>
+<p>sekurlsa::dpapi</p>
+<p><img src="/2022/03/12/DPAPI-leaning/wps1536.tmp.jpg" alt="img"></p>
+<p>我们知道mimikatz中的sekurlsa模块都是操作lsass进程内存实现的。因此在无法做到对mimikatz或者其他什么无法直接在目标机器上运行mimikatz的情况下，我们可以利用微软开发的procdump工具将lsass进程内存dump下来。</p>
+<p><img src="/2022/03/12/DPAPI-leaning/wps2804.tmp.jpg" alt="img"></p>
+<p>再使用以下两个命令对dump下来的lsass.dmp读取dpapi</p>
+<p>sekurlsa::minidump lsass.dmp</p>
+<p>sekurlsa::dpapi</p>
+<p><img src="/2022/03/12/DPAPI-leaning/wps3CD5.tmp.jpg" alt="img"></p>
+<p>前面提到过很多第三方应用也使用了DPAPI的函数来对数据进行保护，mimikatz中自带了对chrome的利用模块。可使用以下两个命令获取DPAPI中的cookies和登录信息。</p>
+<p>dpapi::chrome &#x2F;in:”%localappdata%\Google\Chrome\User Data\Default\Cookies” &#x2F;unprotect</p>
+<p>dpapi::chrome &#x2F;in:”%localappdata%\Google\Chrome\User Data\Default\login data” &#x2F;unprotect</p>
+<p><img src="/2022/03/12/DPAPI-leaning/wps53B9.tmp.jpg" alt="img"></p>
+<h3 id="Preferred文件"><a href="#Preferred文件" class="headerlink" title="Preferred文件"></a>Preferred文件</h3><p>上面提到过在DPAPI的masterkey文件下存储了masterkey和preferred文件，masterkey作为解密的关键有着重要的作用。通过对preferred解析可以显示并延长masterkey的有效时间。以下是preferred的数据结构。</p>
+<p>typedef struct _tagPreferredMasterKey</p>
+<p>{</p>
+<p>GUID guidMasterKey;</p>
+<p>FILETIME ftCreated;</p>
+<p>} PREFERREDMASTERKEY, *PPREFERREDMASTERKEY;</p>
+<p>使用16进制编辑器打开preferred</p>
+<p><img src="/2022/03/12/DPAPI-leaning/wps68F8.tmp.jpg" alt="img"></p>
+<p>如图所示前16个字节对应的是guid，后8字节表示的是过期时间，可使用以下代码读取preferred文件</p>
+<p>#include &lt;windows.h&gt;</p>
+<p>#include&lt;stdio.h&gt;</p>
+<p>int main(void)</p>
+<p>{</p>
+<p>FILE* fp;</p>
+<p>unsigned char buf[24];</p>
+<p>fopen_s(&amp;fp, “C:&#x2F;&#x2F;Users&#x2F;Administrator&#x2F;Desktop&#x2F;tmp&#x2F;Preferred”, “rb”);</p>
+<p>fread(buf, 1, 24, fp);</p>
+<p>printf(“Data: “);</p>
+<p>for (int i &#x3D; 0; i &lt; 24; i++)</p>
+<p>{</p>
+<p>printf(“%02x”, buf[i]);</p>
+<p>}</p>
+<p>fclose(fp);</p>
+<p>printf(“\nguidMasterKey: %02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x\n”, buf[3], buf[2], buf[1], buf[0], buf[5], buf[4], buf[7], buf[6], buf[8], buf[9], buf[10], buf[11], buf[12], buf[13], buf[14], buf[15]);</p>
+<p>char lowDateTime[9], highDateTime[9];</p>
+<p>sprintf_s(lowDateTime, 9, “%02X%02X%02X%02X”, buf[19], buf[18], buf[17], buf[16]);</p>
+<p>sprintf_s(highDateTime, 9, “%02X%02X%02X%02X”, buf[23], buf[22], buf[21], buf[20]);</p>
+<p>printf(“dwLowDateTime:%s\n”, lowDateTime);</p>
+<p>printf(“dwHighDateTime:%s\n”, highDateTime);</p>
+<p>FILETIME ftUTC;</p>
+<p>SYSTEMTIME stUTC2;</p>
+<p>sscanf_s(lowDateTime, “%x”, &amp;ftUTC.dwLowDateTime);</p>
+<p>sscanf_s(highDateTime, “%x”, &amp;ftUTC.dwHighDateTime);</p>
+<p>FileTimeToSystemTime(&amp;ftUTC, &amp;stUTC2);</p>
+<p>printf(“”);</p>
+<p>printf(“Expiry time: %d-%d-%d %d:%d:%d\n”, stUTC2.wYear, stUTC2.wMonth, stUTC2.wDay, stUTC2.wHour, stUTC2.wMinute, stUTC2.wSecond);</p>
+<p>return 0;</p>
+<p>}</p>
+<p><img src="/2022/03/12/DPAPI-leaning/wps851C.tmp.jpg" alt="img"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>DPAPI是Windows提供的对数据保护的api，有四个核心的函数CryptProtectData、CryptUnProtectData、CryptProtectMemory和CryptUnProtectMemory。CryptProtectData负责加密数据，CryptUnProtectData负责解密数据</p>
+<p>masterkey是DPAPI加密解密的关键，默认90更新一次，masterkey存储位置的文件下一个preferred，对preferred文件解析可查看并修改masterkey的过期时间。</p>
+<p>使用mimikatz可直接获取到目标机器的masterkey，同时mimikatz自带有对部分使用了DPAPI应用的解密功能，如Chrome的cookies和login data。</p>
 
                 
             </div>
@@ -529,7 +569,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/">http://example.com/2022/01/07/IIS%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/</a>
+                    <a href="http://example.com/2022/03/12/DPAPI-leaning/">http://example.com/2022/03/12/DPAPI-leaning/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -567,12 +607,16 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-                                    <span class="chip bg-color">漏洞分析</span>
+                                <a href="/tags/Windows-api/">
+                                    <span class="chip bg-color">Windows api</span>
                                 </a>
                             
-                                <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">
-                                    <span class="chip bg-color">中间件</span>
+                                <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
+                                    <span class="chip bg-color">密码获取</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
+                                    <span class="chip bg-color">内网渗透</span>
                                 </a>
                             
                         </div>
@@ -624,13 +668,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/01/21/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/">
+                <a href="/2022/03/12/Ghostcat-Tomcat/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="Windows下密码获取(leaning)">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="Ghostcat Tomcat">
                         
-                        <span class="card-title">Windows下密码获取(leaning)</span>
+                        <span class="card-title">Ghostcat Tomcat</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -641,14 +685,14 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-01-21
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
-                                    内网渗透
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
+                                    漏洞分析
                                 </a>
                             
                             
@@ -658,8 +702,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
-                        <span class="chip bg-color">密码获取</span>
+                    <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E/">
+                        <span class="chip bg-color">中间件漏洞</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                        <span class="chip bg-color">漏洞分析</span>
                     </a>
                     
                 </div>
@@ -673,13 +721,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/11/15/DPAPI-leaning/">
+                <a href="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="DPAPI(leaning)">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="Java反序列化-cc1链">
                         
-                        <span class="card-title">DPAPI(leaning)</span>
+                        <span class="card-title">Java反序列化-cc1链</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -690,18 +738,18 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-15
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
-                                    内网渗透
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
+                                    漏洞分析
                                 </a>
                             
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/Windows-API/" class="post-category">
-                                    Windows API
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/" class="post-category">
+                                    反序列化利用链
                                 </a>
                             
                             
@@ -711,16 +759,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Windows-api/">
-                        <span class="chip bg-color">Windows api</span>
+                    <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/">
+                        <span class="chip bg-color">反序列化利用链</span>
                     </a>
                     
-                    <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
-                        <span class="chip bg-color">密码获取</span>
-                    </a>
-                    
-                    <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
-                        <span class="chip bg-color">内网渗透</span>
+                    <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+                        <span class="chip bg-color">Java代码审计</span>
                     </a>
                     
                 </div>

