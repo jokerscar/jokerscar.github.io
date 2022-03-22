@@ -5,9 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords" content="Spring Cloud Gateway表达式注入(未完成内存马注入), jokerscar&#39;blogs">
-    <meta name="description" content="漏洞复现 
-环境搭建 
-直接使用vulhub(https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947) 中的项目，为演示方便将项目从docker中的spring-">
+    <meta name="description" content="漏洞复现环境搭建直接使用vulhub(https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947) 中的项目，为演示方便将项目从docker中的spring-clou">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -456,16 +454,12 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p><strong>漏洞复现</strong> </p>
-<p><strong>环境搭建</strong> </p>
-<p>直接使用vulhub(<a target="_blank" rel="noopener" href="https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947">https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947</a>) 中的项目，为演示方便将项目从docker中的spring-cloud-gateway-0.0.1-SNAPSHOT.jar文件下载至Windows环境下并使用java开启</p>
-<p><strong>rce:</strong></p>
-<p>发送payload创建恶意路由</p>
+                <h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a><strong>漏洞复现</strong></h2><h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a><strong>环境搭建</strong></h3><p>直接使用vulhub(<a target="_blank" rel="noopener" href="https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947">https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947</a>) 中的项目，为演示方便将项目从docker中的spring-cloud-gateway-0.0.1-SNAPSHOT.jar文件下载至Windows环境下并使用java开启</p>
+<h4 id="rce"><a href="#rce" class="headerlink" title="rce:"></a><strong>rce:</strong></h4><p>发送payload创建恶意路由</p>
 <p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEEED.tmp.jpg" alt="img"></p>
 <p>刷新路由执行SpEL表达式</p>
 <p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEEEE.tmp.jpg" alt="img"></p>
-<p><em><strong>*漏洞分析*</strong></em></p>
-<p>在org.springframework.cloud.gateway.support#ShortcutConfigurable.getValue()中使用了SpEL表达式</p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a><strong>漏洞分析</strong></h2><p>在org.springframework.cloud.gateway.support#ShortcutConfigurable.getValue()中使用了SpEL表达式</p>
 <p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEEEF.tmp.jpg" alt="img"></p>
 <p>在这个方法下的normalize调用了getvalue()方法</p>
 <p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEEF0.tmp.jpg" alt="img"></p>

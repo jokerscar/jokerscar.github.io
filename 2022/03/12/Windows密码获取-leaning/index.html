@@ -496,7 +496,7 @@
 <h3 id="secretsdumps读取明文密码"><a href="#secretsdumps读取明文密码" class="headerlink" title="secretsdumps读取明文密码"></a>secretsdumps读取明文密码</h3><p>secretsdumps.py -sam sam.save -security security.save -system system.save LOCAL</p>
 <p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AE9.tmp.jpg" alt="img"></p>
 <p>可以看到成功获取到部分明文密码</p>
-<h2 id="获取本地保存的远程-RDP明文密码"><a href="#获取本地保存的远程-RDP明文密码" class="headerlink" title="获取本地保存的远程****RDP明文密码"></a><strong>获取本地保存的远程****RDP明文密码</strong></h2><p>假设当前存在一个拥有administrator权限的webshell，我们可以查看注册表找出与本地(受控服务器)连接过的机器。命令如下</p>
+<h2 id="获取本地保存的远程RDP明文密码"><a href="#获取本地保存的远程RDP明文密码" class="headerlink" title="获取本地保存的远程RDP明文密码"></a><strong>获取本地保存的远程RDP明文密码</strong></h2><p>假设当前存在一个拥有administrator权限的webshell，我们可以查看注册表找出与本地(受控服务器)连接过的机器。命令如下</p>
 <p>reg query “HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Servers” &#x2F;s</p>
 <p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AEA.tmp.jpg" alt="img"></p>
 <p>可以看到这里有一个与10.x.x.50有过rdp协议通信的机器，使用cmdkey &#x2F;list命令可查看详情，使用以下命令可查阅本地是否保留rdp的密码</p>
@@ -521,7 +521,7 @@
 <p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6AFF.tmp.jpg" alt="img"></p>
 <p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6B00.tmp.jpg" alt="img"></p>
 <p>可以看到sandbox的密码是55555</p>
-<h2 id="获取系统保存过的-WIFI密码"><a href="#获取系统保存过的-WIFI密码" class="headerlink" title="获取系统保存过的****WIFI密码"></a><strong>获取系统保存过的****WIFI密码</strong></h2><p>使用netsh wlan show profiles命令获取连接过的WiFi名</p>
+<h2 id="获取系统保存过的WIFI密码"><a href="#获取系统保存过的WIFI密码" class="headerlink" title="获取系统保存过的WIFI密码"></a><strong>获取系统保存过的WIFI密码</strong></h2><p>使用netsh wlan show profiles命令获取连接过的WiFi名</p>
 <p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6B01.tmp.jpg" alt="img"></p>
 <p>确定WiFi，以上述Mi未列输入命令netsh wlan show profile name&#x3D;”Mi” key&#x3D;clear</p>
 <p><img src="/2022/03/12/Windows%E5%AF%86%E7%A0%81%E8%8E%B7%E5%8F%96-leaning/wps6B02.tmp.jpg" alt="img"></p>
