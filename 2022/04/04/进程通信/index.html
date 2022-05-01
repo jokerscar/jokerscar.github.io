@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Spring Cloud Gateway表达式注入(未完成内存马注入), jokerscar&#39;blogs">
-    <meta name="description" content="漏洞复现环境搭建直接使用vulhub(https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947) 中的项目，为演示方便将项目从docker中的spring-clou">
+    <meta name="keywords" content="进程通信, jokerscar&#39;blogs">
+    <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Spring Cloud Gateway表达式注入(未完成内存马注入) | jokerscar&#39;blogs</title>
+    <title>进程通信 | jokerscar&#39;blogs</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -287,12 +287,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Spring Cloud Gateway表达式注入(未完成内存马注入)</h1>
+                    <h1 class="description center-align post-title">进程通信</h1>
                 </div>
             </div>
         </div>
@@ -406,25 +406,12 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-                                <span class="chip bg-color">漏洞分析</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fas fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
-                                漏洞分析
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -433,7 +420,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-03-19
+                    2022-04-04
                 </div>
                 
 
@@ -454,42 +441,7 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a><strong>漏洞复现</strong></h2><h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a><strong>环境搭建</strong></h3><p>直接使用vulhub(<a target="_blank" rel="noopener" href="https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947">https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947</a>) 中的项目，为演示方便将项目从docker中的spring-cloud-gateway-0.0.1-SNAPSHOT.jar文件下载至Windows环境下并使用java开启</p>
-<h4 id="rce"><a href="#rce" class="headerlink" title="rce:"></a><strong>rce:</strong></h4><p>发送payload创建恶意路由</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEEED.tmp.jpg" alt="img"></p>
-<p>刷新路由执行SpEL表达式</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEEEE.tmp.jpg" alt="img"></p>
-<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a><strong>漏洞分析</strong></h2><p>在org.springframework.cloud.gateway.support#ShortcutConfigurable.getValue()中使用了SpEL表达式</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEEEF.tmp.jpg" alt="img"></p>
-<p>在这个方法下的normalize调用了getvalue()方法</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEEF0.tmp.jpg" alt="img"></p>
-<p>可以在org.springframework.cloud.gateway.filter.factory#GatewayFilterFactory中观察到GatewayFilterFactory继承了ShortcutConfigurable</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF01.tmp.jpg" alt="img"></p>
-<p>其中某条getvalue的调用链如下</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF02.tmp.jpg" alt="img"></p>
-<p>定位到convertToRoute()方法</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF03.tmp.jpg" alt="img"></p>
-<p>convertToRoute()方法在加载录用时被调用，传入的RouteDefinition属性如下</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF04.tmp.jpg" alt="img"></p>
-<p>查看官方列出的路由接口定义</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF05.tmp.jpg" alt="img"></p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF06.tmp.jpg" alt="img"></p>
-<p>可通过&#x2F;gateway&#x2F;routes&#x2F;{id_route_to_create}创建路由</p>
-<p>然后通过&#x2F;actuator&#x2F;gateway&#x2F;refresh刷新路由，重新加载配置使得路由生效。</p>
-<p>因此攻击者可以添加带有filter的恶意路由，当重新加载路由时，会触发对参数的归一化逻辑，从而导致filter参数value中的SPEL表达式被解析。</p>
-<p><strong>注入内存马</strong></p>
-<p>发送payload</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF07.tmp.jpg" alt="img"></p>
-<p>刷新路由</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF09.tmp.jpg" alt="img"></p>
-<p>注入失败</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF0A.tmp.png" alt="img"><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/wpsEF1A.tmp.jpg" alt="img"></p>
-<p><em><strong>参考链接</strong></em></p>
-<p><a target="_blank" rel="noopener" href="https://wya.pl/2022/02/26/cve-2022-22947-spel-casting-and-evil-beans/">https://wya.pl/2022/02/26/cve-2022-22947-spel-casting-and-evil-beans/</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/vulhub/vulhub/blob/master/spring/CVE-2022-22947/README.zh-cn.md">https://github.com/vulhub/vulhub/blob/master/spring/CVE-2022-22947/README.zh-cn.md</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/murphysec/article/details/123262978">https://blog.csdn.net/murphysec/article/details/123262978</a></p>
-<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/lKKOUvWqU1Qpexus5u_3Uw">https://mp.weixin.qq.com/s/lKKOUvWqU1Qpexus5u_3Uw</a></p>
-
+                
                 
             </div>
             <hr/>
@@ -515,7 +467,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/">http://example.com/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/</a>
+                    <a href="http://example.com/2022/04/04/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/">http://example.com/2022/04/04/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -552,11 +504,7 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-                                    <span class="chip bg-color">漏洞分析</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -607,13 +555,51 @@
                 <i class="far fa-dot-circle"></i>&nbsp;本篇
             </div>
             <div class="card">
-                <a href="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%86%85%E5%AD%98%E9%A9%AC%E6%B3%A8%E5%85%A5/">
+                <a href="/2022/04/04/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Spring Cloud Gateway表达式注入(未完成内存马注入)">
+                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="进程通信">
                         
-                        <span class="card-title">Spring Cloud Gateway表达式注入(未完成内存马注入)</span>
+                        <span class="card-title">进程通信</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-04-04
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            jokerscar
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="Spring Cloud Gateway表达式注入">
+                        
+                        <span class="card-title">Spring Cloud Gateway表达式注入</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -638,69 +624,11 @@
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
                     <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
                         <span class="chip bg-color">漏洞分析</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2022/03/13/Windows%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E5%85%A5%E9%97%A8/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="Windows安全认证入门">
-                        
-                        <span class="card-title">Windows安全认证入门</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-13
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
-                                    内网渗透
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
-                        <span class="chip bg-color">内网渗透</span>
-                    </a>
-                    
-                    <a href="/tags/Windows%E5%AE%89%E5%85%A8/">
-                        <span class="chip bg-color">Windows安全</span>
-                    </a>
-                    
-                    <a href="/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/">
-                        <span class="chip bg-color">内网横向</span>
                     </a>
                     
                 </div>

