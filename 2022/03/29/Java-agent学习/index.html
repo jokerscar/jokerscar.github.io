@@ -4,8 +4,10 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Spring Cloud Gateway表达式注入, jokerscar&#39;blogs">
-    <meta name="description" content="漏洞复现环境搭建直接使用vulhub(https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947) 中的项目，为演示方便将项目从docker中的spring-clou">
+    <meta name="keywords" content="Java agent学习, jokerscar&#39;blogs">
+    <meta name="description" content="AgentJava Agent是jdk1.5以后引入的在字节码这个层面对类和方法进行修改的技术，能够在不影响编译的情况下，修改字节码。可以理解spring的aop技术。
+Java agent的实现方式主要有两种：
+· premain方法，在">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +19,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Spring Cloud Gateway表达式注入 | jokerscar&#39;blogs</title>
+    <title>Java agent学习 | jokerscar&#39;blogs</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -287,12 +289,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Spring Cloud Gateway表达式注入</h1>
+                    <h1 class="description center-align post-title">Java agent学习</h1>
                 </div>
             </div>
         </div>
@@ -406,25 +408,12 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-                                <span class="chip bg-color">漏洞分析</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fas fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
-                                漏洞分析
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -433,7 +422,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-03-19
+                    2022-03-29
                 </div>
                 
 
@@ -454,34 +443,102 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a><strong>漏洞复现</strong></h2><h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a><strong>环境搭建</strong></h3><p>直接使用vulhub(<a target="_blank" rel="noopener" href="https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947">https://github.com/vulhub/vulhub/tree/master/spring/CVE-2022-22947</a>) 中的项目，为演示方便将项目从docker中的spring-cloud-gateway-0.0.1-SNAPSHOT.jar文件下载至Windows环境下并使用java开启</p>
-<h4 id="rce"><a href="#rce" class="headerlink" title="rce:"></a><strong>rce:</strong></h4><p>发送payload创建恶意路由</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/wpsEEED.tmp.jpg" alt="img"></p>
-<p>刷新路由执行SpEL表达式</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/wpsEEEE.tmp.jpg" alt="img"></p>
-<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a><strong>漏洞分析</strong></h2><p>在org.springframework.cloud.gateway.support#ShortcutConfigurable.getValue()中使用了SpEL表达式</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/wpsEEEF.tmp.jpg" alt="img"></p>
-<p>在这个方法下的normalize调用了getvalue()方法</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/wpsEEF0.tmp.jpg" alt="img"></p>
-<p>可以在org.springframework.cloud.gateway.filter.factory#GatewayFilterFactory中观察到GatewayFilterFactory继承了ShortcutConfigurable</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/wpsEF01.tmp.jpg" alt="img"></p>
-<p>其中某条getvalue的调用链如下</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/wpsEF02.tmp.jpg" alt="img"></p>
-<p>定位到convertToRoute()方法</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/wpsEF03.tmp.jpg" alt="img"></p>
-<p>convertToRoute()方法在加载录用时被调用，传入的RouteDefinition属性如下</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/wpsEF04.tmp.jpg" alt="img"></p>
-<p>查看官方列出的路由接口定义</p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/wpsEF05.tmp.jpg" alt="img"></p>
-<p><img src="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/wpsEF06.tmp.jpg" alt="img"></p>
-<p>可通过&#x2F;gateway&#x2F;routes&#x2F;{id_route_to_create}创建路由</p>
-<p>然后通过&#x2F;actuator&#x2F;gateway&#x2F;refresh刷新路由，重新加载配置使得路由生效。</p>
-<p>因此攻击者可以添加带有filter的恶意路由，当重新加载路由时，会触发对参数的归一化逻辑，从而导致filter参数value中的SPEL表达式被解析。</p>
-<p><em><strong>参考链接</strong></em></p>
-<p><a target="_blank" rel="noopener" href="https://wya.pl/2022/02/26/cve-2022-22947-spel-casting-and-evil-beans/">https://wya.pl/2022/02/26/cve-2022-22947-spel-casting-and-evil-beans/</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/vulhub/vulhub/blob/master/spring/CVE-2022-22947/README.zh-cn.md">https://github.com/vulhub/vulhub/blob/master/spring/CVE-2022-22947/README.zh-cn.md</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/murphysec/article/details/123262978">https://blog.csdn.net/murphysec/article/details/123262978</a></p>
-<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/lKKOUvWqU1Qpexus5u_3Uw">https://mp.weixin.qq.com/s/lKKOUvWqU1Qpexus5u_3Uw</a></p>
+                <h2 id="Agent"><a href="#Agent" class="headerlink" title="Agent"></a>Agent</h2><p>Java Agent是jdk1.5以后引入的在字节码这个层面对类和方法进行修改的技术，能够在不影响编译的情况下，修改字节码。可以理解spring的aop技术。</p>
+<p>Java agent的实现方式主要有两种：</p>
+<p>· premain方法，在JVM启动前</p>
+<p>· agentmain方法，在JVM启动后加载</p>
+<h3 id="premain实现"><a href="#premain实现" class="headerlink" title="premain实现"></a>premain实现</h3><p>首先创建一个类并实现premain方法</p>
+<p>package com.vul.agent;</p>
+<p>import java.lang.instrument.Instrumentation;</p>
+<p>public class preagent {</p>
+<p>  public static void premain(String args, Instrumentation inst) {</p>
+<p>​    for(int i &#x3D;0 ; i&lt;10; i++){</p>
+<p>​    System.out.println(“调用了premain方法”);</p>
+<p>​    }</p>
+<p>  }</p>
+<p>}</p>
+<p>创建完方法后在src&#x2F;main&#x2F;resources目录下创建META-INF&#x2F;MANIFEST.MF内容如下其中Premain-Class的值是实现preagent方法的完整类名</p>
+<p><img src="/2022/03/29/Java-agent%E5%AD%A6%E4%B9%A0/wps1.jpg" alt="img"></p>
+<p>再将整个项目打包成一个jar包</p>
+<p><img src="/2022/03/29/Java-agent%E5%AD%A6%E4%B9%A0/wps2.jpg" alt="img"></p>
+<p>使用这个preagent的jar包只需在正常运行一个java程序前指定参数javaagent为要使用的这个jar包即可，如下图以打开jd-gui为例</p>
+<p><img src="/2022/03/29/Java-agent%E5%AD%A6%E4%B9%A0/wps3.jpg" alt="img"></p>
+<p>这里可以看到启动JVM前在指定agent参数后先调用了premain方法再正常运行jd-gui</p>
+<h3 id="agentmain实现"><a href="#agentmain实现" class="headerlink" title="agentmain实现"></a>agentmain实现</h3><p>agentmain的实现是在JVM启动后，在实战过程中我们不可能直接让目标重启JVM，所以在实战中注入内存马实现的就是agentmain这个方法。</p>
+<p>实现agent</p>
+<p>package com.vul.agent;</p>
+<p>import java.lang.instrument.Instrumentation;</p>
+<p>public class AgentMain {</p>
+<p>  public static void agentmain(String args, Instrumentation inst) {</p>
+<p>​    for (int i&#x3D;0; i&lt;10; i++){</p>
+<p>​      System.out.println(“this is agentmain”);</p>
+<p>​    }</p>
+<p>  }</p>
+<p>}</p>
+<p>agentmain的实现过程与premain大致一样，需在MANIFEST.MF中另外指定Agent-Class并指定实现agentmain方法的完整类名。使用方法不再是启动前指定参数，需要用到jdk自带的tools.jar中VirtualMachine这个针对java虚拟机的API。Oracle官方给出的这个API方法的使用如下</p>
+<p><img src="/2022/03/29/Java-agent%E5%AD%A6%E4%B9%A0/wps4.jpg" alt="img"></p>
+<p>还是以jd-gui为例，打开jd-gui并找到jd-gui的pid</p>
+<p><img src="/2022/03/29/Java-agent%E5%AD%A6%E4%B9%A0/wps5.jpg" alt="img"></p>
+<p>再使用Oracle官方给出的VisualMachine方法加载agent到jd-gui的内存中</p>
+<p><img src="/2022/03/29/Java-agent%E5%AD%A6%E4%B9%A0/wps6.jpg" alt="img"></p>
+<p>可以看到成功agentmain方法注入成功</p>
+<h3 id="修改字节码"><a href="#修改字节码" class="headerlink" title="修改字节码"></a>修改字节码</h3><p>Java Agent内存马注入其实就是在执行agentmain方法时通过Instrumentation参数修改字节码将内存马注册进目标进程中，agentmain方法的执行流程已经在前面了解过了，现在需要知道的就是怎么通过Instrumentation修改字节码</p>
+<h4 id="Instrumentation"><a href="#Instrumentation" class="headerlink" title="Instrumentation"></a>Instrumentation</h4><p>Instrumentation 是 JVMTIAgent（JVM Tool Interface Agent）的一部分，Java agent通过这个类和目标 JVM 进行交互，premain和agentmain两个方法的第二个默认的参数是实现Instrumentation的对象，Instrumentation接口定义了十几个方法，用于拦截类加载时间，对字节码进行修改。可能会用到以下几种方法</p>
+<p>&#x2F;&#x2F;增加一个Class文件的转换器，将一个实现了ClassFileTransformer接口的对象注册成我们需要的transform</p>
+<p>void addTransformer(ClassFileTransformer transformer);</p>
+<p>&#x2F;&#x2F;触发transformer</p>
+<p>void retransformClasses(Class&lt;?&gt;… classes) throws UnmodifiableClassException;</p>
+<p>&#x2F;&#x2F;判断目标能否被修改</p>
+<p>boolean isModifiableClass(Class&lt;?&gt; theClass);</p>
+<p>&#x2F;&#x2F;获取已加载在JVM中的class</p>
+<p> Class[] getAllLoadedClasses();</p>
+<p>另外在构造premain和使agentmain方法时不一定要用到Instrumentation但用了Instrumentation参数的方法优先级更高</p>
+<h4 id="ClassFileTransformer"><a href="#ClassFileTransformer" class="headerlink" title="ClassFileTransformer"></a>ClassFileTransformer</h4><p>可以看到addTransformer方法中传入参数是ClassFileTransformer对象，在ClassFileTransformer中我们可以重写transform类对javassist进行修改</p>
+<p><strong>javassist</strong></p>
+<p>Javassist (java programming A)是一个开源的分析、编辑和创建 Java 字节码的类库，它能在java程序运行时定义新的类并在JVM加载时修改类文件。</p>
+<p><strong>ClassPool</strong></p>
+<p>ClassPool是CtClass对象的容器。CtClass对象必须从该对象获得。如果get()在此对象上调用，则它将搜索表示的各种源ClassPath 以查找类文件，然后创建一个CtClass表示该类文件的对象。创建的对象将返回给调用者。</p>
+<p><strong>CtClass</strong></p>
+<p>对指定class文件处理的类</p>
+<p>ClassPool cp &#x3D; ClassPool.getDefault();</p>
+<p>CtClass ctc &#x3D; cp.get(editClassName);</p>
+<p>CtMethod</p>
+<p>对通过CtClass获取到的类中的方法进行修改</p>
+<p>CtMethod method &#x3D; ctc.getDeclaredMethod(editMethod);</p>
+<p><strong>完整Demo</strong></p>
+<p>下面就来创建一个完整的实例</p>
+<p>创建一个hello类，里面包含一个hello方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">hello</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">hello</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">&quot;this is hello function&quot;</span>);</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建一个测试类两次调用hello方法并用scanner暂停对比被agent修改前后的区别</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">hellotest</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">hello</span> <span class="variable">h</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">hello</span>();</span><br><span class="line"></span><br><span class="line">    h.hello();</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">&quot;flag start...&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//标记暂停</span></span><br><span class="line"></span><br><span class="line">    <span class="type">Scanner</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line"></span><br><span class="line">    sc.next();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//重新执行</span></span><br><span class="line"></span><br><span class="line">    <span class="type">hello</span> <span class="variable">h2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">hello</span>();</span><br><span class="line"></span><br><span class="line">    h2.hello();</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">&quot;flag ends....&quot;</span>);</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来就构造agentmmain，首先实现一个ClassFileTransformer重写transform在其中指定要修改的方法是hello类中的hello方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TransformerDemo</span> <span class="keyword">implements</span> <span class="title class_">ClassFileTransformer</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">editClassName</span> <span class="operator">=</span> <span class="string">&quot;com.vul.hello&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">editMethod</span> <span class="operator">=</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="type">byte</span>[] transform(ClassLoader loader, String className, Class&lt;?&gt; classBeingRedefined, ProtectionDomain protectionDomain, <span class="type">byte</span>[] classfileBuffer) <span class="keyword">throws</span> IllegalClassFormatException &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">      <span class="type">ClassPool</span> <span class="variable">cp</span> <span class="operator">=</span> ClassPool.getDefault();</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span>(classBeingRedefined !=<span class="literal">null</span>)&#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">ClassClassPath</span> <span class="variable">ccp</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ClassClassPath</span>(classBeingRedefined);</span><br><span class="line"></span><br><span class="line">        cp.insertClassPath(ccp);</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">//获取修改的类名</span></span><br><span class="line"></span><br><span class="line">      <span class="type">CtClass</span> <span class="variable">ctc</span> <span class="operator">=</span> cp.get(editClassName);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//获取修改的方法名</span></span><br><span class="line"></span><br><span class="line">      <span class="type">CtMethod</span> <span class="variable">method</span> <span class="operator">=</span> ctc.getDeclaredMethod(editMethod);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//设置被修改后的方法的内容</span></span><br><span class="line"></span><br><span class="line">      <span class="type">String</span> <span class="variable">source</span> <span class="operator">=</span><span class="string">&quot;&#123;System.out.println(\&quot;hello method has been transformer\&quot;);&#125;&quot;</span>;</span><br><span class="line"></span><br><span class="line">      method.setBody(source);</span><br><span class="line"></span><br><span class="line">      <span class="type">byte</span>[] bytes = ctc.toBytecode();</span><br><span class="line"></span><br><span class="line">      ctc.detach();</span><br><span class="line"></span><br><span class="line">      System.out.println();</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> bytes;</span><br><span class="line"></span><br><span class="line">    &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line"></span><br><span class="line">      e.printStackTrace();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span>  <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p>在agentmain中通过Instrumentation调用addTransformer和retransformClasses</p>
+<p>public class AgentMain {</p>
+<p>  public static void agentmain(String args, Instrumentation inst) throws UnmodifiableClassException {</p>
+<p>​    &#x2F;&#x2F;注册Transformer</p>
+<p>​    inst.addTransformer(new TransformerDemo());</p>
+<p>​    &#x2F;&#x2F;获取JVM中类并遍历</p>
+<p>​    Class[] classes &#x3D; inst.getAllLoadedClasses();</p>
+<p>​    for (Class aClass :classes){</p>
+<p>​      &#x2F;&#x2F;判断是否为想要修改的类</p>
+<p>​      if (aClass.getName().equals(TransformerDemo.editClassName)){</p>
+<p>​        System.out.println(aClass.getName());</p>
+<p>​        &#x2F;&#x2F;触发Transformer</p>
+<p>​        inst.retransformClasses(aClass);</p>
+<p>​        System.out.println(“agentmain注入标记,被修改的类的类名为:”+aClass.getName());</p>
+<p>​      }</p>
+<p>​    }</p>
+<p>  }</p>
+<p>}</p>
+<p>tips:<strong>因为用到了retransformClasses方法，还需要在MANIFEST.MF中设置Can-Retransform-Classes: true</strong></p>
+<p>将上面的agentmain打包成jar包后启动测试方法并在暂停的时候使用前面提到的VirtualMachine将agent注入进test中再继续执行test观察变化</p>
+<p><img src="/2022/03/29/Java-agent%E5%AD%A6%E4%B9%A0/wps7.jpg" alt="img"></p>
+<p><img src="/2022/03/29/Java-agent%E5%AD%A6%E4%B9%A0/wps8.jpg" alt="img"></p>
+<p>可以看到在注入agentmain后hello被transform方法修改</p>
 
                 
             </div>
@@ -508,7 +565,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/">http://example.com/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/</a>
+                    <a href="http://example.com/2022/03/29/Java-agent%E5%AD%A6%E4%B9%A0/">http://example.com/2022/03/29/Java-agent%E5%AD%A6%E4%B9%A0/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -545,11 +602,7 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-                                    <span class="chip bg-color">漏洞分析</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -599,13 +652,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/03/29/Java-agent%E5%AD%A6%E4%B9%A0/">
+                <a href="/2022/04/04/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="Java agent学习">
+                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="进程通信">
                         
-                        <span class="card-title">Java agent学习</span>
+                        <span class="card-title">进程通信</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -616,7 +669,7 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-03-29
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-04-04
                         </span>
                         <span class="publish-author">
                             
@@ -636,13 +689,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/03/13/Windows%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E5%85%A5%E9%97%A8/">
+                <a href="/2022/03/19/Spring-Cloud-Gateway%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="Windows安全认证入门">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="Spring Cloud Gateway表达式注入">
                         
-                        <span class="card-title">Windows安全认证入门</span>
+                        <span class="card-title">Spring Cloud Gateway表达式注入</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -653,14 +706,14 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-13
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-03-19
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-category">
-                                    内网渗透
+                            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="post-category">
+                                    漏洞分析
                                 </a>
                             
                             
@@ -670,16 +723,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">
-                        <span class="chip bg-color">内网渗透</span>
-                    </a>
-                    
-                    <a href="/tags/Windows%E5%AE%89%E5%85%A8/">
-                        <span class="chip bg-color">Windows安全</span>
-                    </a>
-                    
-                    <a href="/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/">
-                        <span class="chip bg-color">内网横向</span>
+                    <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+                        <span class="chip bg-color">漏洞分析</span>
                     </a>
                     
                 </div>
